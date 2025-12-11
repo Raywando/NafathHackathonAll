@@ -1,7 +1,8 @@
+import os
 from openai import OpenAI
 
 def analyze_risk(request):
-    client = OpenAI(api_key="OPENAI_KEY")
+    client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
     with open('prompt.txt', 'r') as f:
         prompt = f.read()
 
