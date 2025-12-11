@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Fingerprinter</title>
+</head>
+
+<body>
+    <h1>Fingerprinter</h1>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script>
+        // Minimal MD5 function (tiny implementation)
+        function md5(str) {
+            return CryptoJS.MD5(str).toString();
+        }
+
+        async function getFingerprint() {
+            const data = {};
+
+            // 1. User Agent (low entropy, but useful)
+            data.userAgent = navigator.userAgent || "";
+
+            // 2. Screen Information
+            data.screen = {
+                width: screen.width,
+                height: screen.height,
+                availWidth: screen.availWidth,
+                availHeight: screen.availHeight,
+                colorDepth: screen.colorDepth,
+                pixelRatio: window.devicePixelRatio
+            };
+
+            // 3. Hardware Concurrency + Memory
+            data.hardware = {
+                cores: navigator.hardwareConcurrency || "",
+                memory: navigator.deviceMemory || "",
+                maxTouchPoints: navigator.maxTouchPoints || ""
+            };
+
+            // 4. Language + Timezone
+            data.locale = {
+                language: navigator.language,
+                languages: navigator.languages,
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                offset: new Date().getTimezoneOffset()
+            };
+
+            // 5. Plugins
+            data.plugins = Array.from(navigator.plugins).map(p => p.name).join(",");
+
+            // 6. WebGL Fingerprint (GPU info)
+            function getWebGLFingerprint() {
+                try {
+                    const canvas = document.createElement('canvas');
+                    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+                    if (!gl) return "";
+                    const dbg = gl.getExtension('WEBGL_debug_renderer_info');
+                    return {
+                        renderer: dbg ? gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : "",
+                        vendor: dbg ? gl.getParameter(dbg.UNMASKED_VENDOR_WEBGL) : "",
+                        shading: gl.getShaderPrecisionFormat(gl.VERTEX_SHADER, gl.HIGH_FLOAT).precision
+                    };
+                } catch (e) {
+                    return "";
+                }
+            }
+            data.webgl = getWebGLFingerprint();
+
+            // 7. Canvas Fingerprint
+            function getCanvasFingerprint() {
+                try {
+                    const canvas = document.createElement("canvas");
+                    const ctx = canvas.getContext("2d");
+                    ctx.textBaseline = "top";
+                    ctx.font = "16px Arial";
+                    return canvas.toDataURL();
+                } catch (e) {
+                    return "";
+                }
+            }
+            // data.canvas = getCanvasFingerprint();
+
+            // 8. Audio Fingerprint
+            async function getAudioFingerprint() {
+                try {
+                    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = ctx.createOscillator();
+                    const compressor = ctx.createDynamicsCompressor();
+
+                    oscillator.type = "triangle";
+                    oscillator.frequency.value = 10000;
+
+                    oscillator.connect(compressor);
+                    compressor.connect(ctx.destination);
+                    oscillator.start(0);
+
+                    const fingerprint = ctx.sampleRate + "-" + ctx.baseLatency;
+                    oscillator.stop();
+
+                    return fingerprint;
+                } catch (e) {
+                    return "";
+                }
+            }
+            data.audio = await getAudioFingerprint();
+
+            // 9. Storage Estimate
+            if (navigator.storage && navigator.storage.estimate) {
+                const estimate = await navigator.storage.estimate();
+                data.storage = {
+                    quota: estimate.quota,
+                    usage: estimate.usage
+                };
+            }
+
+            // Final combined fingerprint object
+            const fingerprintString = JSON.stringify(data);
+
+            // Final MD5 hash
+            const fingerprintHash = md5(fingerprintString);
+
+            console.log("Fingerprint Data:", data);
+            console.log("MD5 Fingerprint:", fingerprintHash);
+
+            console.log("Fingerprint Hash:", fingerprintHash);
+
+            alert(fingerprintHash);
+
+            return fingerprintHash;
+        }
+
+        // Call the function
+        getFingerprint();
+    </script>
+
+</body>
+
+</html>

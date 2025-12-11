@@ -1,0 +1,444 @@
+{
+    "request_metadata": {
+        "target_national_id": {
+            "type": "text"
+        }
+    },
+    "operation_details": {
+        "client_name": {
+            "type": "dropdown",
+            "options": [
+                "MINISTRY_OF_JUSTICE",
+                "REAL_ESTATE_REGISTRARS",
+                "MONSHAAT",
+                "STC_BANK",
+                "STC",
+                "SAB_BANK",
+                "EJAR",
+                "ALRAJHI_BANK",
+                "MOBILY",
+                "ALINMA_BANK"
+            ]
+        },
+        "operation_type": {
+            "type": "dropdown",
+            "options": [
+                "PLATFORM_LOGIN",
+                "REGISTER_ACCOUNT",
+                "ISSUE_POWER_OF_ATTORNEY",
+                "OPEN_BANK_ACCOUNT",
+                "ISSUE_NEW_SIM",
+                "VERIFY_TRUSTED_DEVICE",
+                "VERIFY_LOAN_REQUEST"
+            ]
+        },
+        "operation_sensitivity": {
+            "type": "dropdown",
+            "options": [
+                "HIGH",
+                "MEDIUM",
+                "LOW"
+            ]
+        },
+        "operation_parameters": {
+            "type": "repeater_with_value",
+            "fields": [
+                {
+                    "parameter_name": {
+                        "type": "text"
+                    },
+                    "parameter_value": {
+                        "type": "text"
+                    }
+                }
+            ]
+        }
+    },
+    "requester_context": {
+        "device": {
+            "user_agent": {
+                "type": "dropdown",
+                "options": [
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.1 Safari/605.1.15",
+                    "Mozilla/5.0 (iPhone; CPU iPhone OS 19_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/143.0.7499.38 Mobile/15E148 Safari/604.1",
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+                    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+                    "Mozilla/5.0 (Linux; Android 16; SM-S938U) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Mobile Safari/537.36"
+                ]
+            },
+            "device_model": {
+                "type": "dropdown",
+                "options": [
+                    "iPhone 17 Pro Max",
+                    "Samsung Galaxy S25 Ultra",
+                    "Google Pixel 10 Pro",
+                    "OnePlus 15",
+                    "Motorola Razr Ultra"
+                ]
+            },
+            "os_version": {
+                "type": "dropdown",
+                "options": [
+                    "Android 16",
+                    "iOS 19",
+                    "Windows 11 (25H2)",
+                    "macOS Sequoia (15.0)",
+                    "Ubuntu 24.04 LTS"
+                ]
+            },
+            "browser": {
+                "type": "dropdown",
+                "options": [
+                    "Chrome 143",
+                    "Safari 18",
+                    "Firefox 145",
+                    "Edge 142",
+                    "Samsung Internet 28"
+                ]
+            },
+            "device_hash": {
+                "type": "dropdown",
+                "options": [
+                    "ddee1199aabb2277ff6644332288ffaa",
+                    "a1b2c3d4e5f6789012345678901234ab",
+                    "f9e8d7c6b5a4930281746352819047bc",
+                    "123456789abcdef0fedcba9876543210",
+                    "9f8e7d6c5b4a39281746352819047bcd"
+                ]
+            }
+        },
+        "ip_information": {
+            "ip": {
+                "type": "dropdown",
+                "options": [
+                    "185.77.200.55",
+                    "84.21.91.10",
+                    "244.178.44.111",
+                    "54.237.84.223",
+                    "237.84.2.178"
+                ]
+            },
+            "city": {
+                "type": "dropdown",
+                "options": [
+                    "Makkah",
+                    "Riyadh",
+                    "Jeddah",
+                    "Madinah",
+                    "Dammam",
+                    "Dhahran",
+                    "Abha",
+                    "Jizan",
+                    "Hail",
+                    "Tabuk",
+                    "Qatif",
+                    "Taif",
+                    "London",
+                    "New York",
+                    "Tokyo",
+                    "Sydney",
+                    "Toronto"
+                ]
+            },
+            "country": {
+                "type": "dropdown",
+                "options": [
+                    "Saudi Arabia",
+                    "United States",
+                    "United Kingdom",
+                    "Canada",
+                    "Australia"
+                ]
+            },
+            "is_vpn": {
+                "type": "checkbox"
+            }
+        },
+        "device_statistics_30d": {
+            "total_requests": {
+                "type": "number"
+            },
+            "unique_national_ids": {
+                "type": "number"
+            },
+            "requests_for_target": {
+                "type": "number"
+            },
+            "first_time_used_for_target_id": {
+                "type": "checkbox"
+            }
+        }
+    },
+    "approver_context": {
+        "profile": {
+            "age": {
+                "type": "number"
+            },
+            "gender": {
+                "type": "dropdown",
+                "options": [
+                    "MALE",
+                    "FEMALE"
+                ]
+            }
+        },
+        "ip_information": {
+            "ip": {
+                "type": "dropdown",
+                "options": [
+                    "185.77.200.55",
+                    "84.21.91.10",
+                    "244.178.44.111",
+                    "54.237.84.223",
+                    "237.84.2.178"
+                ]
+            },
+            "city": {
+                "type": "dropdown",
+                "options": [
+                    "Makkah",
+                    "Riyadh",
+                    "Jeddah",
+                    "Madinah",
+                    "Dammam",
+                    "Dhahran",
+                    "Abha",
+                    "Jizan",
+                    "Hail",
+                    "Tabuk",
+                    "Qatif",
+                    "Taif",
+                    "London",
+                    "New York",
+                    "Tokyo",
+                    "Sydney",
+                    "Toronto"
+                ]
+            },
+            "country": {
+                "type": "dropdown",
+                "options": [
+                    "Saudi Arabia",
+                    "United States",
+                    "United Kingdom",
+                    "Canada",
+                    "Australia"
+                ]
+            },
+            "is_vpn": {
+                "type": "checkbox"
+            }
+        },
+        "device": {
+            "user_agent": {
+                "type": "dropdown",
+                "options": [
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.1 Safari/605.1.15",
+                    "Mozilla/5.0 (iPhone; CPU iPhone OS 19_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/143.0.7499.38 Mobile/15E148 Safari/604.1",
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+                    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+                    "Mozilla/5.0 (Linux; Android 16; SM-S938U) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Mobile Safari/537.36"
+                ]
+            },
+            "device_model": {
+                "type": "dropdown",
+                "options": [
+                    "iPhone 17 Pro Max",
+                    "Samsung Galaxy S25 Ultra",
+                    "Google Pixel 10 Pro",
+                    "OnePlus 15",
+                    "Motorola Razr Ultra"
+                ]
+            },
+            "os_version": {
+                "type": "dropdown",
+                "options": [
+                    "Android 16",
+                    "iOS 19",
+                    "Windows 11 (25H2)",
+                    "macOS Sequoia (15.0)",
+                    "Ubuntu 24.04 LTS"
+                ]
+            },
+            "browser": {
+                "type": "dropdown",
+                "options": [
+                    "Chrome 143",
+                    "Safari 18",
+                    "Firefox 145",
+                    "Edge 142",
+                    "Samsung Internet 28"
+                ]
+            },
+            "device_hash": {
+                "type": "dropdown",
+                "options": [
+                    "ddee1199aabb2277ff6644332288ffaa",
+                    "a1b2c3d4e5f6789012345678901234ab",
+                    "f9e8d7c6b5a4930281746352819047bc",
+                    "123456789abcdef0fedcba9876543210",
+                    "9f8e7d6c5b4a39281746352819047bcd"
+                ]
+            }
+        },
+        "device_session": {
+            "active_session_duration_minutes": {
+                "type": "number"
+            }
+        }
+    },
+    "target_user_history": {
+        "operations_stats": {
+            "total_requests": {
+                "type": "number"
+            },
+            "approved_requests": {
+                "type": "number"
+            },
+            "rejected_requests": {
+                "type": "number"
+            },
+            "timed_out_requests": {
+                "type": "number"
+            },
+            "total_sensitive_operations": {
+                "type": "number"
+            }
+        },
+        "device_usage": {
+            "unique_devices_requested_from": {
+                "type": "number"
+            },
+            "unique_devices_approved_from": {
+                "type": "number"
+            }
+        },
+        "location_history": {
+            "cities_requested_from": {
+                "type": "dropdown_multiple",
+                "options": [
+                    "Makkah",
+                    "Riyadh",
+                    "Jeddah",
+                    "Madinah",
+                    "Dammam",
+                    "Dhahran",
+                    "Abha",
+                    "Jizan",
+                    "Hail",
+                    "Tabuk",
+                    "Qatif",
+                    "Taif"
+                ]
+            },
+            "cities_approved_from": {
+                "type": "dropdown_multiple",
+                "options": [
+                    "Makkah",
+                    "Riyadh",
+                    "Jeddah",
+                    "Madinah",
+                    "Dammam",
+                    "Dhahran",
+                    "Abha",
+                    "Jizan",
+                    "Hail",
+                    "Tabuk",
+                    "Qatif",
+                    "Taif"
+                ]
+            }
+        },
+        "recent_activity_24h": {
+            "all_operations": {
+                "requests": {
+                    "type": "number"
+                },
+                "approved": {
+                    "type": "number"
+                },
+                "rejected": {
+                    "type": "number"
+                },
+                "timeouts": {
+                    "type": "number"
+                }
+            },
+            "same_operation": {
+                "requests": {
+                    "type": "number"
+                },
+                "approved": {
+                    "type": "number"
+                },
+                "rejected": {
+                    "type": "number"
+                },
+                "timeouts": {
+                    "type": "number"
+                },
+                "first_time_used": {
+                    "type": "checkbox"
+                }
+            }
+        }
+    },
+    "vetting_information": {
+        "user_historical_inputs": {
+            "known_input_names": {
+                "type": "repeater",
+                "fields": [
+                    {
+                        "name": {
+                            "type": "text"
+                        }
+                    }
+                ]
+            },
+            "known_input_phone_numbers": {
+                "type": "repeater",
+                "fields": [
+                    {
+                        "phone": {
+                            "type": "text"
+                        }
+                    }
+                ]
+            },
+            "known_input_addresses": {
+                "type": "repeater",
+                "fields": [
+                    {
+                        "address": {
+                            "type": "text"
+                        }
+                    }
+                ]
+            }
+        },
+        "user_official_data": {
+            "registered_phone_numbers": {
+                "type": "repeater",
+                "fields": [
+                    {
+                        "phone": {
+                            "type": "text"
+                        }
+                    }
+                ]
+            },
+            "registered_addresses": {
+                "type": "repeater",
+                "fields": [
+                    {
+                        "address": {
+                            "type": "text"
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

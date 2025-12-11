@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nafath Request Builder</title>
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+    <!-- Flatpickr -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+        .main-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .section-card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+        }
+        .section-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px 10px 0 0;
+            font-weight: 600;
+        }
+        .subsection-header {
+            background: #f8f9fa;
+            padding: 0.75rem 1rem;
+            border-left: 4px solid #667eea;
+            margin: 1rem 0 0.5rem 0;
+            font-weight: 600;
+            color: #495057;
+        }
+        .nested-level-1 {
+            margin-left: 0;
+            padding-left: 1.5rem;
+            border-left: 3px solid #e9ecef;
+        }
+        .nested-level-2 {
+            margin-left: 1rem;
+            padding-left: 1.5rem;
+            border-left: 3px solid #dee2e6;
+            background: #fafbfc;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .nested-level-3 {
+            margin-left: 2rem;
+            padding-left: 1.5rem;
+            border-left: 3px solid #ced4da;
+            background: #f1f3f5;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .subsection-header.level-1 {
+            font-size: 1.1rem;
+            border-left-width: 5px;
+            background: linear-gradient(90deg, #f8f9fa 0%, #ffffff 100%);
+        }
+        .subsection-header.level-2 {
+            font-size: 1rem;
+            border-left-width: 4px;
+            border-left-color: #764ba2;
+            margin-left: 1rem;
+            background: linear-gradient(90deg, #fafbfc 0%, #ffffff 100%);
+        }
+        .subsection-header.level-3 {
+            font-size: 0.95rem;
+            border-left-width: 3px;
+            border-left-color: #9d7cbf;
+            margin-left: 2rem;
+            background: linear-gradient(90deg, #fcfcfd 0%, #ffffff 100%);
+        }
+        .repeater-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+        .btn-remove-repeater {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+        }
+        #jsonOutput, #approvalOutput {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 8px;
+            padding: 1.5rem;
+            max-height: 500px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        .select2-container {
+            width: 100% !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-container">
+            <div class="text-center mb-4">
+                <h1 class="display-4"><i class="bi bi-shield-lock"></i> Nafath Request Builder</h1>
+                <p class="text-muted">Configure and generate Nafath authentication requests</p>
+            </div>
+            
+            <form id="requestForm">
+                <div id="formContainer"></div>
+                
+                <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg px-5">
+                        <i class="bi bi-send"></i> Generate & Send Request
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-lg px-5" onclick="resetForm()">
+                        <i class="bi bi-arrow-clockwise"></i> Reset Form
+                    </button>
+                </div>
+            </form>
+            
+            <div id="outputSection" class="mt-4" style="display: none;">
+                <div class="card section-card">
+                    <div class="section-header d-flex justify-content-between align-items-center">
+                        <span><i class="bi bi-code-square"></i> Generated JSON</span>
+                        <button class="btn btn-light btn-sm" onclick="copyToClipboard()">
+                            <i class="bi bi-clipboard"></i> Copy
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <pre id="jsonOutput"></pre>
+                    </div>
+                </div>
+                
+                <div id="approvalSection" class="card section-card mt-3" style="display: none;">
+                    <div class="section-header d-flex justify-content-between align-items-center">
+                        <span><i class="bi bi-check-circle"></i> Approval Response</span>
+                        <button class="btn btn-light btn-sm" onclick="copyApprovalToClipboard()">
+                            <i class="bi bi-clipboard"></i> Copy
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <pre id="approvalOutput"></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap 5 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Select2 -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <!-- Flatpickr -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        let schema = {};
+        let approvalInterval = null;
+
+        // Load schema and build form
+        fetch('request_properties.json')
+            .then(res => res.json())
+            .then(data => {
+                schema = data;
+                buildForm();
+            })
+            .catch(err => {
+                Swal.fire('Error', 'Failed to load form schema', 'error');
+            });
+
+        function toTitleCase(str) {
+            return str.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        }
+
+        function buildForm() {
+            const container = $('#formContainer');
+            
+            Object.entries(schema).forEach(([sectionKey, sectionData]) => {
+                const card = $('<div class="card section-card"></div>');
+                
+                let headerText = toTitleCase(sectionKey);
+                if (sectionKey === 'approver_context' || sectionKey === "target_user_history" || sectionKey === "vetting_information") {
+                    headerText += ' <small class="text-warning">(Simulated - Processed by Nafath Backend After Approval)</small>';
+                }
+                
+                const header = $(`<div class="section-header"><i class="bi bi-folder"></i> ${headerText}</div>`);
+                const body = $('<div class="card-body"></div>');
+                
+                buildFields(sectionData, body, sectionKey);
+                
+                card.append(header).append(body);
+                container.append(card);
+            });
+            
+            // Initialize Select2
+            $('.select2-single').select2({
+                theme: 'bootstrap-5',
+                placeholder: 'Select an option...',
+                allowClear: true
+            });
+            
+            $('.select2-multiple').select2({
+                theme: 'bootstrap-5',
+                placeholder: 'Select options...',
+                allowClear: true
+            });
+            
+            // Initialize Flatpickr
+            flatpickr('.datetime-picker', {
+                enableTime: true,
+                dateFormat: 'Y-m-d H:i',
+                time_24hr: true
+            });
+        }
+
+        function buildFields(obj, container, path, level = 0) {
+            let currentRow = null;
+            let fieldCount = 0;
+            
+            Object.entries(obj).forEach(([key, config]) => {
+                const fieldPath = `${path}.${key}`;
+                const label = toTitleCase(key);
+                
+                if (config.type) {
+                    // Create new row every 4 fields
+                    if (fieldCount % 4 === 0) {
+                        currentRow = $('<div class="row mb-3"></div>');
+                        container.append(currentRow);
+                    }
+                    
+                    const formGroup = $('<div class="col-md-3 col-sm-6"></div>');
+                    
+                    switch(config.type) {
+                        case 'text':
+                            formGroup.append(`
+                                <label class="form-label">${label}</label>
+                                <input type="text" class="form-control" data-path="${fieldPath}" placeholder="Enter ${label.toLowerCase()}">
+                            `);
+                            break;
+                            
+                        case 'number':
+                            formGroup.append(`
+                                <label class="form-label">${label}</label>
+                                <input type="number" class="form-control" data-path="${fieldPath}" placeholder="Enter ${label.toLowerCase()}">
+                            `);
+                            break;
+                            
+                        case 'checkbox':
+                            formGroup.append(`
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" data-path="${fieldPath}" id="${fieldPath}">
+                                    <label class="form-check-label" for="${fieldPath}">${label}</label>
+                                </div>
+                            `);
+                            break;
+                            
+                        case 'datetime':
+                            formGroup.append(`
+                                <label class="form-label">${label}</label>
+                                <input type="text" class="form-control datetime-picker" data-path="${fieldPath}" placeholder="Select date and time">
+                            `);
+                            break;
+                            
+                        case 'dropdown':
+                            const select = $(`<select class="form-select select2-single" data-path="${fieldPath}"></select>`);
+                            select.append('<option value="">Select...</option>');
+                            config.options.forEach(opt => {
+                                select.append(`<option value="${opt}">${opt}</option>`);
+                            });
+                            formGroup.append(`<label class="form-label">${label}</label>`).append(select);
+                            break;
+                            
+                        case 'dropdown_multiple':
+                            const multiSelect = $(`<select class="form-select select2-multiple" multiple data-path="${fieldPath}"></select>`);
+                            config.options.forEach(opt => {
+                                multiSelect.append(`<option value="${opt}">${opt}</option>`);
+                            });
+                            formGroup.append(`<label class="form-label">${label}</label>`).append(multiSelect);
+                            break;
+                            
+                        case 'repeater':
+                        case 'repeater_with_value':
+                            const repeaterId = fieldPath.replace(/\./g, '_');
+                            const isKeyValue = config.type === 'repeater_with_value';
+                            formGroup.removeClass('col-md-3 col-sm-6').addClass('col-12');
+                            formGroup.append(`
+                                <label class="form-label">${label}</label>
+                                <div id="${repeaterId}" data-path="${fieldPath}" data-fields='${JSON.stringify(config.fields)}' data-keyvalue="${isKeyValue}"></div>
+                                <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="addRepeaterItem('${repeaterId}')">
+                                    <i class="bi bi-plus-circle"></i> Add ${label.slice(0, -1)}
+                                </button>
+                            `);
+                            break;
+                    }
+                    
+                    currentRow.append(formGroup);
+                    fieldCount++;
+                } else {
+                    // Nested object - reset row counter
+                    fieldCount = 0;
+                    currentRow = null;
+                    
+                    const levelClass = level > 0 ? `level-${Math.min(level, 3)}` : '';
+                    const subsection = $(`<div class="subsection-header ${levelClass}">
+                        ${'&nbsp;&nbsp;'.repeat(level)}<i class="bi bi-chevron-right"></i> ${label}
+                    </div>`);
+                    
+                    const nestedContainer = $(`<div class="nested-level-${Math.min(level + 1, 3)}"></div>`);
+                    buildFields(config, nestedContainer, fieldPath, level + 1);
+                    
+                    container.append(subsection);
+                    container.append(nestedContainer);
+                }
+            });
+        }
+
+        function addRepeaterItem(repeaterId) {
+            const container = $(`#${repeaterId}`);
+            const fields = JSON.parse(container.attr('data-fields'));
+            const isKeyValue = container.attr('data-keyvalue') === 'true';
+            const index = container.children().length;
+            
+            const item = $('<div class="repeater-item"></div>');
+            const row = $('<div class="row"></div>');
+            
+            if (isKeyValue) {
+                // Key-Value pair layout
+                const keyField = Object.keys(fields[0])[0];
+                const valueField = Object.keys(fields[0])[1];
+                
+                row.append(`
+                    <div class="col-md-5">
+                        <input type="text" 
+                               class="form-control" 
+                               data-field="${keyField}" 
+                               placeholder="Parameter Name">
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" 
+                               class="form-control" 
+                               data-field="${valueField}" 
+                               placeholder="Parameter Value">
+                    </div>
+                    <div class="col-md-1 d-flex align-items-center">
+                        <button type="button" class="btn btn-sm btn-danger w-100" onclick="$(this).closest('.repeater-item').remove()">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                `);
+            } else {
+                // Regular repeater layout
+                fields.forEach(fieldConfig => {
+                    const fieldName = Object.keys(fieldConfig)[0];
+                    const fieldType = fieldConfig[fieldName].type;
+                    const col = $(`<div class="col"></div>`);
+                    
+                    col.append(`
+                        <input type="${fieldType === 'number' ? 'number' : 'text'}" 
+                               class="form-control" 
+                               data-field="${fieldName}" 
+                               placeholder="${toTitleCase(fieldName)}">
+                    `);
+                    row.append(col);
+                });
+                
+                item.append(`
+                    <button type="button" class="btn btn-sm btn-danger btn-remove-repeater" onclick="$(this).parent().remove()">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                `);
+            }
+            
+            item.append(row);
+            container.append(item);
+        }
+
+        $('#requestForm').on('submit', async function(e) {
+            e.preventDefault();
+            
+            const data = {};
+            
+            // Collect regular fields
+            $('[data-path]').each(function() {
+                const $el = $(this);
+                const path = $el.attr('data-path');
+                let value;
+                
+                if ($el.is(':checkbox')) {
+                    value = $el.is(':checked');
+                } else if ($el.attr('type') === 'number') {
+                    value = $el.val() ? parseFloat($el.val()) : null;
+                } else if ($el.hasClass('datetime-picker')) {
+                    value = $el.val() ? new Date($el.val()).toISOString() : null;
+                } else if ($el.is('select[multiple]')) {
+                    value = $el.val() || [];
+                } else if ($el.is('select') || $el.is('input')) {
+                    value = $el.val();
+                } else {
+                    // Repeater container
+                    const isKeyValue = $el.attr('data-keyvalue') === 'true';
+                    
+                    if (isKeyValue) {
+                        // Convert to object for key-value pairs
+                        const obj = {};
+                        $el.find('.repeater-item').each(function() {
+                            let key = null;
+                            let val = null;
+                            $(this).find('[data-field]').each(function() {
+                                const fieldName = $(this).attr('data-field');
+                                const fieldValue = $(this).val();
+                                if (fieldName.includes('name')) {
+                                    key = fieldValue;
+                                } else if (fieldName.includes('value')) {
+                                    val = fieldValue;
+                                }
+                            });
+                            if (key && val) {
+                                obj[key] = val;
+                            }
+                        });
+                        if (Object.keys(obj).length > 0) {
+                            value = obj;
+                        }
+                    } else {
+                        // Regular array for repeaters
+                        const items = [];
+                        $el.find('.repeater-item').each(function() {
+                            const itemData = {};
+                            $(this).find('[data-field]').each(function() {
+                                const fieldName = $(this).attr('data-field');
+                                const fieldValue = $(this).val();
+                                if (fieldValue) {
+                                    itemData[fieldName] = $(this).attr('type') === 'number' ? parseFloat(fieldValue) : fieldValue;
+                                }
+                            });
+                            if (Object.keys(itemData).length > 0) {
+                                items.push(itemData);
+                            }
+                        });
+                        if (items.length > 0) {
+                            value = items;
+                        }
+                    }
+                }
+                
+                if (value !== null && value !== '' && value !== undefined && 
+                    (!Array.isArray(value) || value.length > 0)) {
+                    setNestedValue(data, path, value);
+                }
+            });
+            
+            // Display JSON
+            $('#jsonOutput').text(JSON.stringify(data, null, 2));
+            $('#outputSection').show();
+            
+            // Send to API
+            try {
+                const response = await fetch('http://localhost:8001/api/request', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    Swal.fire('Success', 'Request sent successfully!', 'success');
+                    startApprovalCheck();
+                } else {
+                    Swal.fire('Error', 'Failed to send request', 'error');
+                }
+            } catch (err) {
+                Swal.fire('Error', 'Failed to connect to API', 'error');
+            }
+        });
+
+        function setNestedValue(obj, path, value) {
+            const keys = path.split('.');
+            let current = obj;
+            
+            for (let i = 0; i < keys.length - 1; i++) {
+                if (!current[keys[i]]) {
+                    current[keys[i]] = {};
+                }
+                current = current[keys[i]];
+            }
+            
+            current[keys[keys.length - 1]] = value;
+        }
+
+        function startApprovalCheck() {
+            stopApprovalCheck();
+            approvalInterval = setInterval(checkApproval, 5000);
+        }
+
+        function stopApprovalCheck() {
+            if (approvalInterval) {
+                clearInterval(approvalInterval);
+                approvalInterval = null;
+            }
+        }
+
+        async function checkApproval() {
+            try {
+                const response = await fetch('http://localhost:8001/api/approval');
+                if (response.ok) {
+                    const approval = await response.json();
+                    if (approval && Object.keys(approval).length > 0) {
+                        stopApprovalCheck();
+                        
+                        // Parse approval_risk if it exists
+                        let displayData = approval;
+                        if (approval.approval_risk) {
+                            try {
+                                const riskData = JSON.parse(approval.approval_risk);
+                                displayData = {
+                                    status: approval.status,
+                                    approval_risk: riskData
+                                };
+                            } catch (e) {
+                                console.error('Failed to parse approval_risk:', e);
+                            }
+                        }
+                        
+                        // Display approval in the approval section
+                        $('#approvalOutput').text(JSON.stringify(displayData, null, 2));
+                        $('#approvalSection').show();
+                        
+                        // Show simple success alert
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Approval Received!',
+                            text: 'The approval response has been displayed below the generated JSON.',
+                            confirmButtonText: 'View Response'
+                        });
+                    }
+                }
+            } catch (err) {
+                console.error('Approval check failed:', err);
+            }
+        }
+
+        function resetForm() {
+            stopApprovalCheck();
+            $('#requestForm')[0].reset();
+            $('.select2-single, .select2-multiple').val(null).trigger('change');
+            $('.repeater-item').remove();
+            $('#outputSection').hide();
+            $('#approvalSection').hide();
+        }
+
+        function copyToClipboard() {
+            const text = $('#jsonOutput').text();
+            navigator.clipboard.writeText(text).then(() => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Copied!',
+                    text: 'JSON copied to clipboard',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            });
+        }
+
+        function copyApprovalToClipboard() {
+            const text = $('#approvalOutput').text();
+            navigator.clipboard.writeText(text).then(() => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Copied!',
+                    text: 'Approval response copied to clipboard',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            });
+        }
+    </script>
+</body>
+</html>
