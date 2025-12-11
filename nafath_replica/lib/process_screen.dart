@@ -21,7 +21,7 @@ class _ProcessScreenState extends State<ProcessScreen>
   final _timeout = 60;
   late int _countdownSeconds; // Total countdown time
   late Timer _countdownTimer;
-  String apiUrl = "http://localhost:8002";
+  String apiUrl = "http://localhost:8001";
 
   @override
   void initState() {
