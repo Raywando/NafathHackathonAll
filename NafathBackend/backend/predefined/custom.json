@@ -1,0 +1,102 @@
+{
+  "requester_context": {
+    "device": {
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+      "device_model": "Samsung Galaxy S25 Ultra",
+      "os_version": "Android 16",
+      "browser": "Chrome 143",
+      "device_hash": "a1b2c3d4e5f6789012345678901234ab"
+    },
+    "ip_information": {
+      "ip": "84.21.91.10",
+      "city": "Jeddah",
+      "country": "Saudi Arabia",
+      "is_vpn": true
+    },
+    "device_statistics_30d": {
+      "total_requests": 8,
+      "unique_national_ids": 4,
+      "requests_for_target": 2,
+      "first_time_used_for_target_id": true
+    }
+  },
+  "approver_context": {
+    "profile": {
+      "age": 28,
+      "gender": "MALE"
+    },
+    "ip_information": {
+      "ip": "244.178.44.111",
+      "city": "Dammam",
+      "country": "Saudi Arabia",
+      "is_vpn": false
+    },
+    "device": {
+      "user_agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 19_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/143.0.7499.38 Mobile/15E148 Safari/604.1",
+      "device_model": "iPhone 17 Pro Max",
+      "os_version": "iOS 19",
+      "browser": "Safari 18",
+      "device_hash": "f9e8d7c6b5a4930281746352819047bc"
+    },
+    "device_session": {
+      "active_session_duration_minutes": 2
+    }
+  },
+  "target_user_history": {
+    "operations_stats": {
+      "total_requests": 89,
+      "approved_requests": 72,
+      "rejected_requests": 12,
+      "timed_out_requests": 5,
+      "total_sensitive_operations": 8
+    },
+    "device_usage": {
+      "unique_devices_requested_from": 5,
+      "unique_devices_approved_from": 3
+    },
+    "location_history": {
+      "cities_requested_from": ["Dammam", "Riyadh", "Jeddah", "Makkah"],
+      "cities_approved_from": ["Dammam", "Riyadh"]
+    },
+    "recent_activity_24h": {
+      "all_operations": {
+        "requests": 12,
+        "approved": 8,
+        "rejected": 3,
+        "timeouts": 1
+      },
+      "same_operation": {
+        "requests": 5,
+        "approved": 3,
+        "rejected": 2,
+        "timeouts": 0,
+        "first_time_used": false
+      }
+    }
+  },
+  "vetting_information": {
+    "user_historical_inputs": {
+      "known_input_names": [
+        {"name": "Khalid Abdullah Al-Mutairi"},
+        {"name": "K. Al-Mutairi"},
+        {"name": "Khalid A. Mutairi"}
+      ],
+      "known_input_phone_numbers": [
+        {"phone": "+966551122334"},
+        {"phone": "+966559988776"}
+      ],
+      "known_input_addresses": [
+        {"address": "Prince Mohammed Bin Fahd Road, Dammam 31411"},
+        {"address": "Al Khobar Street, Dammam"}
+      ]
+    },
+    "user_official_data": {
+      "registered_phone_numbers": [
+        {"phone": "+966551122334"}
+      ],
+      "registered_addresses": [
+        {"address": "Prince Mohammed Bin Fahd Road, Dammam 31411"}
+      ]
+    }
+  }
+}

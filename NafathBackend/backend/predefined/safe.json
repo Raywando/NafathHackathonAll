@@ -1,0 +1,101 @@
+{
+  "requester_context": {
+    "device": {
+      "user_agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1",
+      "device_model": "iPhone 16 Pro",
+      "os_version": "iOS 18.5",
+      "browser": "Safari 18",
+      "device_hash": "aa55bb66cc77dd88ee99ff0011223344"
+    },
+    "ip_information": {
+      "ip": "84.22.90.104",
+      "city": "Riyadh",
+      "country": "Saudi Arabia",
+      "is_vpn": false
+    },
+    "device_statistics_30d": {
+      "total_requests": 8,
+      "unique_national_ids": 2,
+      "requests_for_target": 5,
+      "first_time_used_for_target_id": false
+    }
+  },
+
+  "approver_context": {
+    "profile": {
+      "age": 29,
+      "gender": "FEMALE"
+    },
+    "ip_information": {
+      "ip": "84.22.90.200",
+      "city": "Riyadh",
+      "country": "Saudi Arabia",
+      "is_vpn": false
+    },
+    "device": {
+      "user_agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1",
+      "device_model": "iPhone 16 Pro",
+      "os_version": "iOS 18.5",
+      "browser": "Safari 18",
+      "device_hash": "aa55bb66cc77dd88ee99ff0011223344"
+    },
+    "device_session": {
+      "active_session_duration_minutes": 912
+    }
+  },
+
+  "target_user_history": {
+    "operations_stats": {
+      "total_requests": 310,
+      "approved_requests": 300,
+      "rejected_requests": 2,
+      "timed_out_requests": 8,
+      "total_sensitive_operations": 60
+    },
+    "device_usage": {
+      "unique_devices_requested_from": 2,
+      "unique_devices_approved_from": 2
+    },
+    "location_history": {
+      "cities_requested_from": ["Riyadh"],
+      "cities_approved_from": ["Riyadh"]
+    },
+    "recent_activity_24h": {
+      "all_operations": {
+        "requests": 3,
+        "approved": 3,
+        "rejected": 0,
+        "timeouts": 0
+      },
+      "same_operation": {
+        "requests": 1,
+        "approved": 1,
+        "rejected": 0,
+        "timeouts": 0,
+        "first_time_used": false
+      }
+    }
+  },
+
+  "vetting_information": {
+    "user_historical_inputs": {
+      "known_input_names": [
+        {"name": "Ahlam AlNasser"}
+      ],
+      "known_input_phone_numbers": [
+        {"phone": "+966533112299"}
+      ],
+      "known_input_addresses": [
+        {"address": "Riyadh, AlNada District 1120"}
+      ]
+    },
+    "user_official_data": {
+      "registered_phone_numbers": [
+        {"phone": "+966533112299"}
+      ],
+      "registered_addresses": [
+        {"address": "Riyadh, AlNada District 1120"}
+      ]
+    }
+  }
+}

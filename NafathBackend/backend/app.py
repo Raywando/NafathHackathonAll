@@ -11,13 +11,38 @@ REQUEST_FILE = 'current_request.json'
 APPROVAL_FILE = 'current_approval.json'
 PREVIOUS_REQUEST_FILE = 'previous_request.json'
 PREVIOUS_APPROVAL_FILE = 'previous_approval.json'
+PREDEFINED_FOLDER = 'predefined'
+
+def load_predefined_scenario(scenario_name):
+    scenario_file = os.path.join(PREDEFINED_FOLDER, f'{scenario_name}.json')
+    if os.path.exists(scenario_file):
+        with open(scenario_file, 'r') as f:
+            return json.load(f)
+    return {}
+
+def merge_request_data(user_input, predefined_data):
+    combined = {}
+    combined['request_metadata'] = user_input.get('request_metadata', {})
+    combined['operation_details'] = user_input.get('operation_details', {})
+    combined['requester_context'] = predefined_data.get('requester_context', {})
+    combined['approver_context'] = predefined_data.get('approver_context', {})
+    combined['target_user_history'] = predefined_data.get('target_user_history', {})
+    combined['vetting_information'] = predefined_data.get('vetting_information', {})
+    return combined
 
 @app.route('/api/request', methods=['POST'])
 def store_request():
-    data = request.json
+    user_data = request.json
+    scenario = user_data.get('scenario', 'safe')
+    
+    predefined_data = load_predefined_scenario(scenario)
+    
+    combined_data = merge_request_data(user_data, predefined_data)
+    
     with open(REQUEST_FILE, 'w') as f:
-        json.dump(data, f, indent=2)
-    return jsonify({'status': 'success', 'message': 'Request stored'})
+        json.dump(combined_data, f, indent=2)
+    
+    return jsonify({'status': 'success', 'message': 'Request stored with scenario data'})
 
 @app.route('/api/request', methods=['GET'])
 def get_request():

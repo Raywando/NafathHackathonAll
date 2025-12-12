@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nafath Approval Receiver</title>
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+        .main-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            padding: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-left: 1rem;
+        }
+        .status-waiting {
+            background: #fff3cd;
+            color: #856404;
+            animation: pulse 2s infinite;
+        }
+        .status-received {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+        .spinner-border-custom {
+            width: 3rem;
+            height: 3rem;
+            border-width: 0.3rem;
+        }
+        #approvalOutput {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 8px;
+            padding: 1.5rem;
+            max-height: 600px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+        }
+        .output-card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-top: 2rem;
+        }
+        .output-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px 10px 0 0;
+            font-weight: 600;
+        }
+        .risk-score {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 1rem 0;
+        }
+        .risk-low {
+            color: #28a745;
+        }
+        .risk-medium {
+            color: #ffc107;
+        }
+        .risk-high {
+            color: #ff6b35;
+        }
+        .risk-critical {
+            color: #dc3545;
+            font-weight: 800;
+        }
+        .reason-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            border-left: 4px solid #667eea;
+        }
+        .polling-info {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-container">
+            <div class="text-center mb-4">
+                <h1 class="display-4">
+                    <i class="bi bi-shield-check"></i> Nafath Approval Receiver
+                </h1>
+                <p class="text-muted">Monitoring for approval responses</p>
+                <div>
+                    <span id="statusText">Status:</span>
+                    <span id="statusBadge" class="status-badge status-waiting">
+                        <i class="bi bi-hourglass-split"></i> Waiting for approval...
+                    </span>
+                </div>
+            </div>
+
+            <div class="polling-info">
+                <i class="bi bi-info-circle"></i>
+                <strong>Auto-polling enabled:</strong> Checking for approval every 10 seconds
+                <span id="pollCount" class="ms-2">(0 requests)</span>
+            </div>
+
+            <div id="waitingSection" class="text-center py-5">
+                <div class="spinner-border spinner-border-custom text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-3 text-muted">Waiting for approval response from backend...</p>
+                <small class="text-muted">Last checked: <span id="lastChecked">Never</span></small>
+            </div>
+
+            <div id="approvalSection" class="output-card" style="display: none;">
+                <div class="output-header d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-check-circle"></i> Approval Response Received</span>
+                    <button class="btn btn-light btn-sm" onclick="copyToClipboard()">
+                        <i class="bi bi-clipboard"></i> Copy JSON
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div id="approvalSummary" class="mb-4"></div>
+                    <h5 class="mb-3">Full Response:</h5>
+                    <pre id="approvalOutput"></pre>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <button class="btn btn-secondary" onclick="resetReceiver()">
+                    <i class="bi bi-arrow-clockwise"></i> Reset & Check Again
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap 5 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        let pollingInterval = null;
+        let pollCount = 0;
+        let approvalReceived = false;
+
+        function startPolling() {
+            checkApproval();
+            pollingInterval = setInterval(checkApproval, 10000);
+        }
+
+        function stopPolling() {
+            if (pollingInterval) {
+                clearInterval(pollingInterval);
+                pollingInterval = null;
+            }
+        }
+
+        async function checkApproval() {
+            if (approvalReceived) {
+                stopPolling();
+                return;
+            }
+
+            pollCount++;
+            $('#pollCount').text(`(${pollCount} request${pollCount > 1 ? 's' : ''})`);
+            
+            const now = new Date().toLocaleTimeString();
+            $('#lastChecked').text(now);
+
+            try {
+                const response = await fetch('http://localhost:8001/api/approval');
+                
+                if (response.ok) {
+                    const approval = await response.json();
+                    
+                    if (approval && Object.keys(approval).length > 0 && !approval.error) {
+                        approvalReceived = true;
+                        stopPolling();
+                        displayApproval(approval);
+                    }
+                } else if (response.status === 404) {
+                    console.log('No approval found yet, continuing to poll...');
+                } else {
+                    console.error('Error checking approval:', response.status);
+                }
+            } catch (err) {
+                console.error('Failed to check approval:', err);
+                updateStatus('error', 'Connection Error');
+            }
+        }
+
+        function displayApproval(approval) {
+            updateStatus('received', 'Approval Received!');
+            
+            $('#waitingSection').hide();
+            $('#approvalSection').show();
+
+            let displayData = approval;
+            let riskData = null;
+
+            if (approval.approval_risk) {
+                try {
+                    if (typeof approval.approval_risk === 'string') {
+                        riskData = JSON.parse(approval.approval_risk);
+                    } else {
+                        riskData = approval.approval_risk;
+                    }
+                    displayData = {
+                        status: approval.status,
+                        approval_risk: riskData
+                    };
+                } catch (e) {
+                    console.error('Failed to parse approval_risk:', e);
+                }
+            }
+
+            if (riskData) {
+                displaySummary(riskData);
+            }
+
+            $('#approvalOutput').text(JSON.stringify(displayData, null, 2));
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Approval Received!',
+                text: 'The risk analysis has been completed.',
+                confirmButtonText: 'View Details'
+            });
+        }
+
+        function displaySummary(riskData) {
+            let summaryHtml = '<div class="row">';
+            
+            if (riskData.risk_score !== undefined) {
+                const score = riskData.risk_score;
+                let scoreClass = 'risk-low';
+                let scoreLabel = 'LOW';
+                let scoreBadge = 'success';
+                
+                // Risk thresholds: 0-20: LOW, 21-50: MEDIUM, 51-75: HIGH, 76-100: CRITICAL
+                if (score >= 76) {
+                    scoreClass = 'risk-critical';
+                    scoreLabel = 'CRITICAL';
+                    scoreBadge = 'danger';
+                } else if (score >= 51) {
+                    scoreClass = 'risk-high';
+                    scoreLabel = 'HIGH';
+                    scoreBadge = 'warning';
+                } else if (score >= 21) {
+                    scoreClass = 'risk-medium';
+                    scoreLabel = 'MEDIUM';
+                    scoreBadge = 'warning';
+                }
+                
+                summaryHtml += `
+                    <div class="col-md-6 text-center">
+                        <h5>Risk Score</h5>
+                        <div class="risk-score ${scoreClass}">${score}/100</div>
+                        <span class="badge bg-${scoreBadge} fs-6 mt-2">${scoreLabel}</span>
+                        <p class="text-muted mt-2">
+                            <small>
+                                0-20: LOW | 21-50: MEDIUM | 51-75: HIGH | 76-100: CRITICAL
+                            </small>
+                        </p>
+                    </div>
+                `;
+            }
+
+            if (riskData.recommendation) {
+                summaryHtml += `
+                    <div class="col-md-6 text-center">
+                        <h5>Recommendation</h5>
+                        <div class="risk-score">${riskData.recommendation}</div>
+                    </div>
+                `;
+            }
+
+            summaryHtml += '</div>';
+
+            if (riskData.reasons && Array.isArray(riskData.reasons)) {
+                summaryHtml += '<div class="mt-4"><h5>Risk Factors:</h5>';
+                riskData.reasons.forEach(reason => {
+                    summaryHtml += `<div class="reason-item"><i class="bi bi-exclamation-triangle"></i> ${reason}</div>`;
+                });
+                summaryHtml += '</div>';
+            } else if (riskData.analysis) {
+                summaryHtml += `<div class="mt-4"><h5>Analysis:</h5><div class="reason-item">${riskData.analysis}</div></div>`;
+            }
+
+            $('#approvalSummary').html(summaryHtml);
+        }
+
+        function updateStatus(type, text) {
+            const badge = $('#statusBadge');
+            badge.removeClass('status-waiting status-received status-error');
+            
+            if (type === 'waiting') {
+                badge.addClass('status-waiting');
+                badge.html('<i class="bi bi-hourglass-split"></i> ' + text);
+            } else if (type === 'received') {
+                badge.addClass('status-received');
+                badge.html('<i class="bi bi-check-circle"></i> ' + text);
+            } else if (type === 'error') {
+                badge.addClass('status-error');
+                badge.html('<i class="bi bi-x-circle"></i> ' + text);
+            }
+        }
+
+        function resetReceiver() {
+            approvalReceived = false;
+            pollCount = 0;
+            $('#pollCount').text('(0 requests)');
+            $('#lastChecked').text('Never');
+            $('#waitingSection').show();
+            $('#approvalSection').hide();
+            updateStatus('waiting', 'Waiting for approval...');
+            startPolling();
+        }
+
+        function copyToClipboard() {
+            const text = $('#approvalOutput').text();
+            navigator.clipboard.writeText(text).then(() => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Copied!',
+                    text: 'Approval response copied to clipboard',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            });
+        }
+
+        $(document).ready(function() {
+            startPolling();
+        });
+    </script>
+</body>
+</html>

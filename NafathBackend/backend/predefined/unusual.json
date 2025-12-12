@@ -1,12 +1,4 @@
 {
-  "request_metadata": {
-    "target_national_id": "1111111111"
-  },
-  "operation_details": {
-    "client_name": "STC_BANK",
-    "operation_type": "OPEN_BANK_ACCOUNT",
-    "operation_sensitivity": "MEDIUM"
-  },
   "requester_context": {
     "device": {
       "user_agent": "Mozilla/5.0 (Linux; Android 15; SM-A746B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36",
@@ -28,6 +20,7 @@
       "first_time_used_for_target_id": false
     }
   },
+
   "approver_context": {
     "profile": {
       "age": 36,
@@ -50,6 +43,7 @@
       "active_session_duration_minutes": 12
     }
   },
+
   "target_user_history": {
     "operations_stats": {
       "total_requests": 190,
@@ -63,14 +57,8 @@
       "unique_devices_approved_from": 3
     },
     "location_history": {
-      "cities_requested_from": [
-        "Riyadh",
-        "Jeddah",
-        "Dammam"
-      ],
-      "cities_approved_from": [
-        "Riyadh"
-      ]
+      "cities_requested_from": ["Riyadh", "Jeddah", "Dammam"],
+      "cities_approved_from": ["Riyadh"]
     },
     "recent_activity_24h": {
       "all_operations": {
@@ -88,34 +76,25 @@
       }
     }
   },
+
   "vetting_information": {
     "user_historical_inputs": {
       "known_input_names": [
-        {
-          "name": "Saad Al-Mutairi"
-        }
+        {"name": "Saad Al-Mutairi"}
       ],
       "known_input_phone_numbers": [
-        {
-          "phone": "+966511223344"
-        }
+        {"phone": "+966511223344"}
       ],
       "known_input_addresses": [
-        {
-          "address": "Riyadh, AlYasmin 2241"
-        }
+        {"address": "Riyadh, AlYasmin 2241"}
       ]
     },
     "user_official_data": {
       "registered_phone_numbers": [
-        {
-          "phone": "+966511223344"
-        }
+        {"phone": "+966511223344"}
       ],
       "registered_addresses": [
-        {
-          "address": "Riyadh, AlYasmin 2241"
-        }
+        {"address": "Riyadh, AlYasmin 2241"}
       ]
     }
   }
