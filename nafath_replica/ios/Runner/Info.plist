@@ -45,5 +45,7 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>نفاذ يحتاج إلى الكاميرا للمسح المرئي والتحقق الإضافي</string>
 </dict>
 </plist>

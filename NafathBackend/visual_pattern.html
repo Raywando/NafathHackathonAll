@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نفاذ - التحقق المرئي</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease;
+        }
+        
+        .color-display {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease;
+        }
+        
+        .center-circle {
+            width: 300px; height: 300px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 120px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 0 30px rgba(0,0,0,0.5);
+            border: 8px solid white;
+            animation: pulse 1s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .info-overlay {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            text-align: center;
+            color: white;
+        }
+        
+        .sequence-display {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .color-box {
+            width: 50px; height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            color: white;
+            border: 3px solid rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .color-box.active {
+            transform: scale(1.3);
+            border-color: white;
+            box-shadow: 0 0 30px currentColor;
+        }
+        
+        .color-box.done { opacity: 0.5; }
+        
+        .timer {
+            font-size: 28px;
+            color: #4ECDC4;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        
+        .instructions {
+            font-size: 14px;
+            color: #aaa;
+            margin-top: 10px;
+        }
+        
+        .status {
+            margin-top: 15px;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        .status.waiting { background: #FF9800; color: black; }
+        .status.verified { background: #4CAF50; color: white; }
+        
+        .fullscreen-btn {
+            position: fixed;
+            top: 20px; right: 20px;
+            padding: 10px 20px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            border: 2px solid white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            z-index: 100;
+        }
+        
+        .new-session-btn {
+            position: fixed;
+            top: 20px; left: 20px;
+            padding: 10px 20px;
+            background: #4ECDC4;
+            color: black;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶ ملء الشاشة</button>
+    <button class="new-session-btn" onclick="createNewSession()">🔄 جلسة جديدة</button>
+    
+    <div class="color-display" id="color-display">
+        <div class="center-circle" id="center-circle">?</div>
+    </div>
+    
+    <div class="info-overlay">
+        <div class="sequence-display" id="sequence-display"></div>
+        <div class="timer" id="timer">--</div>
+        <p class="instructions">
+            📱 وجّه كاميرا تطبيق نفاذ نحو الشاشة<br>
+            يتغير اللون كل ثانيتين
+        </p>
+        <div class="status waiting" id="status">⏳ في انتظار المسح...</div>
+    </div>
+
+    <script>
+        // API Base URL
+        const API_URL = 'http://localhost:8002';
+        
+        // BRIGHT, SATURATED colors
+        const COLORS = {
+            'R': '#FF0000',
+            'G': '#00FF00',
+            'B': '#0000FF',
+            'Y': '#FFFF00',
+            'C': '#00FFFF',
+            'M': '#FF00FF'
+        };
+        
+        // State
+        let sequence = [];
+        let currentFrame = 0;
+        let countdown = 2.0;
+        let isVerified = false;
+        
+        const colorDisplay = document.getElementById('color-display');
+        const centerCircle = document.getElementById('center-circle');
+        const timerEl = document.getElementById('timer');
+        const statusEl = document.getElementById('status');
+        
+        // Fetch sequence from backend
+        async function fetchSession() {
+            try {
+                const res = await fetch(`${API_URL}/api/visual/session`);
+                const data = await res.json();
+                sequence = data.sequence || [];
+                isVerified = data.verified || false;
+                
+                if (sequence.length > 0) {
+                    updateDisplay();
+                    updateStatus();
+                }
+            } catch (e) {
+                console.error('Failed to fetch session:', e);
+                // Fallback to random
+                sequence = ['R', 'G', 'B', 'C'];
+                updateDisplay();
+            }
+        }
+        
+        // Create new session
+        async function createNewSession() {
+            try {
+                const res = await fetch(`${API_URL}/api/visual/session`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await res.json();
+                sequence = data.sequence || [];
+                currentFrame = 0;
+                isVerified = false;
+                updateDisplay();
+                updateStatus();
+                console.log('New session:', sequence.join('-'));
+            } catch (e) {
+                console.error('Failed to create session:', e);
+            }
+        }
+        
+        // Check verification status
+        async function checkVerification() {
+            if (isVerified) return;
+            
+            try {
+                const res = await fetch(`${API_URL}/api/visual/status`);
+                const data = await res.json();
+                
+                if (data.verified) {
+                    isVerified = true;
+                    updateStatus();
+                }
+            } catch (e) {
+                // Ignore
+            }
+        }
+        
+        // Update display
+        function updateDisplay() {
+            if (sequence.length === 0) return;
+            
+            const code = sequence[currentFrame];
+            const color = COLORS[code];
+            
+            colorDisplay.style.backgroundColor = color;
+            centerCircle.style.backgroundColor = color;
+            centerCircle.style.boxShadow = `0 0 100px ${color}, 0 0 200px ${color}`;
+            centerCircle.textContent = code;
+            
+            // Update sequence display
+            const container = document.getElementById('sequence-display');
+            container.innerHTML = '';
+            
+            sequence.forEach((c, index) => {
+                const box = document.createElement('div');
+                box.className = 'color-box';
+                if (index === currentFrame) box.classList.add('active');
+                if (index < currentFrame) box.classList.add('done');
+                box.style.backgroundColor = COLORS[c];
+                box.textContent = c;
+                container.appendChild(box);
+            });
+        }
+        
+        function updateStatus() {
+            if (isVerified) {
+                statusEl.className = 'status verified';
+                statusEl.textContent = '✅ تم التحقق بنجاح!';
+            } else {
+                statusEl.className = 'status waiting';
+                statusEl.textContent = '⏳ في انتظار المسح...';
+            }
+        }
+        
+        // Timer tick
+        function tick() {
+            if (sequence.length === 0) return;
+            
+            countdown -= 0.1;
+            if (countdown <= 0) {
+                countdown = 2.0;
+                currentFrame = (currentFrame + 1) % sequence.length;
+                updateDisplay();
+            }
+            timerEl.textContent = countdown.toFixed(1);
+        }
+        
+        // Fullscreen
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+        
+        // Initialize
+        fetchSession();
+        setInterval(tick, 100);
+        setInterval(checkVerification, 2000);
+    </script>
+</body>
+</html>
