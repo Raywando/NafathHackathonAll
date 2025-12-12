@@ -5,8 +5,7 @@
   "operation_details": {
     "client_name": "STC_BANK",
     "operation_type": "OPEN_BANK_ACCOUNT",
-<<<<<<< HEAD
-    "operation_sensitivity": "MEDIUM"
+    "operation_sensitivity": "HIGH"
   },
   "requester_context": {
     "device": {
@@ -26,20 +25,10 @@
       "total_requests": 52,
       "unique_national_ids": 11,
       "requests_for_target": 2,
-=======
-    "operation_sensitivity": "HIGH"
-  },
-  "requester_context": {
-    "ip_information": {
-      "is_vpn": false
-    },
-    "device_statistics_30d": {
->>>>>>> origin/visual-scanner-cleanup
       "first_time_used_for_target_id": false
     }
   },
   "approver_context": {
-<<<<<<< HEAD
     "profile": {
       "age": 36,
       "gender": "MALE"
@@ -59,18 +48,13 @@
     },
     "device_session": {
       "active_session_duration_minutes": 12
-=======
-    "ip_information": {
-      "is_vpn": false
->>>>>>> origin/visual-scanner-cleanup
     }
   },
   "target_user_history": {
     "operations_stats": {
-<<<<<<< HEAD
       "total_requests": 190,
       "approved_requests": 170,
-      "rejected_requests": 8,
+      "rejected_requests": 50,
       "timed_out_requests": 12,
       "total_sensitive_operations": 40
     },
@@ -92,15 +76,15 @@
       "all_operations": {
         "requests": 12,
         "approved": 8,
-        "rejected": 2,
+        "rejected": 35,
         "timeouts": 2
       },
       "same_operation": {
         "requests": 2,
         "approved": 1,
-        "rejected": 1,
+        "rejected": 20,
         "timeouts": 0,
-        "first_time_used": false
+        "first_time_used": true
       }
     }
   },
@@ -134,18 +118,5 @@
         }
       ]
     }
-=======
-      "rejected_requests": 500
-    },
-    "recent_activity_24h": {
-      "all_operations": {
-        "rejected": 500
-      },
-      "same_operation": {
-        "rejected": 5000,
-        "first_time_used": false
-      }
-    }
->>>>>>> origin/visual-scanner-cleanup
   }
 }

@@ -1,226 +1,567 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nafath Request Simulator</title>
+    <title>محاكي طلبات نفاذ</title>
     
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     
     <style>
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 2rem 0;
+        :root {
+            --bg-primary: #0d1b2a;
+            --bg-secondary: #1b2838;
+            --bg-card: #1e2d3d;
+            --accent-teal: #2dd4bf;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-orange: #f59e0b;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border-color: #2a3f54;
         }
-        .main-container {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            padding: 3rem;
-            max-width: 800px;
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 600px;
             margin: 0 auto;
         }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--accent-teal), #0891b2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+
+        .header-icon i {
+            font-size: 2.5rem;
+            color: white;
+        }
+
+        .header h1 {
+            color: var(--accent-teal);
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin: 0 0 0.5rem;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-title i {
+            color: var(--accent-teal);
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
         .form-label {
-            font-weight: 600;
-            color: #495057;
+            display: block;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
             margin-bottom: 0.5rem;
         }
+
         .form-control, .form-select {
-            border-radius: 8px;
-            border: 2px solid #e9ecef;
-            padding: 0.75rem 1rem;
+            width: 100%;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+            color: var(--text-primary);
+            font-family: inherit;
             font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
+
+        .form-control::placeholder {
+            color: var(--text-muted);
+        }
+
         .form-control:focus, .form-select:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+            outline: none;
+            border-color: var(--accent-teal);
+            box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.15);
         }
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            padding: 1rem 3rem;
-            font-size: 1.1rem;
-            border-radius: 10px;
+
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 1rem center;
+            padding-left: 2.5rem;
+        }
+
+        .form-select option {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        /* Scenario Badges */
+        .scenario-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .scenario-option {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .scenario-option:hover {
+            border-color: var(--accent-teal);
+        }
+
+        .scenario-option.active {
+            border-color: var(--accent-teal);
+            background: rgba(45, 212, 191, 0.1);
+        }
+
+        .scenario-option input {
+            display: none;
+        }
+
+        .scenario-radio {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--text-muted);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .scenario-option.active .scenario-radio {
+            border-color: var(--accent-teal);
+            background: var(--accent-teal);
+        }
+
+        .scenario-radio::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--bg-primary);
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .scenario-option.active .scenario-radio::after {
+            opacity: 1;
+        }
+
+        .scenario-content {
+            flex: 1;
+        }
+
+        .scenario-title {
+            color: var(--text-primary);
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .scenario-desc {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .scenario-badge {
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .badge-safe { background: rgba(16, 185, 129, 0.2); color: var(--accent-green); }
+        .badge-unusual { background: rgba(245, 158, 11, 0.2); color: var(--accent-orange); }
+        .badge-dangerous { background: rgba(239, 68, 68, 0.2); color: var(--accent-red); }
+        .badge-custom { background: rgba(45, 212, 191, 0.2); color: var(--accent-teal); }
+
+        /* Simulation Badge */
+        .sim-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            background: rgba(139, 92, 246, 0.15);
+            color: #a78bfa;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            margin-right: 0.5rem;
+        }
+
+        .sim-badge i {
+            font-size: 0.65rem;
+        }
+
+        .form-label-with-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-title .sim-badge {
+            margin-right: auto;
+            margin-left: 0;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 1rem;
             font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
         }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-teal), #0891b2);
+            color: white;
+        }
+
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 8px 25px rgba(45, 212, 191, 0.3);
         }
+
         .btn-secondary {
-            background: #6c757d;
-            border: none;
-            padding: 1rem 3rem;
-            font-size: 1.1rem;
-            border-radius: 10px;
-            font-weight: 600;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
         }
-        #jsonOutput, #approvalOutput {
-            background: #1e1e1e;
-            color: #d4d4d4;
-            border-radius: 8px;
-            padding: 1.5rem;
-            max-height: 500px;
-            overflow-y: auto;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
+
+        .btn-secondary:hover {
+            border-color: var(--text-secondary);
         }
-        .output-card {
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            margin-top: 2rem;
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
         }
+
+        .btn-group .btn {
+            flex: 1;
+        }
+
+        /* Output Section */
+        .output-section {
+            display: none;
+            margin-top: 1.5rem;
+        }
+
         .output-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 1rem;
-            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .output-title {
+            color: var(--accent-teal);
             font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
-        .scenario-badge {
-            display: inline-block;
+
+        .btn-copy {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
             padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            margin-left: 0.5rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
         }
-        .scenario-safe {
-            background: #d4edda;
-            color: #155724;
+
+        .btn-copy:hover {
+            border-color: var(--accent-teal);
+            color: var(--accent-teal);
         }
-        .scenario-unusual {
-            background: #fff3cd;
-            color: #856404;
+
+        .json-output {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.85rem;
+            color: var(--accent-teal);
+            overflow-x: auto;
+            white-space: pre-wrap;
+            direction: ltr;
+            text-align: left;
         }
-        .scenario-dangerous {
-            background: #f8d7da;
-            color: #721c24;
+
+        /* Sweet Alert Customization */
+        .swal2-popup {
+            background: var(--bg-card) !important;
+            color: var(--text-primary) !important;
+            border-radius: 16px !important;
+        }
+
+        .swal2-title {
+            color: var(--text-primary) !important;
+        }
+
+        .swal2-html-container {
+            color: var(--text-secondary) !important;
+        }
+
+        .swal2-confirm {
+            background: var(--accent-teal) !important;
+            border-radius: 10px !important;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="main-container">
-            <div class="text-center mb-5">
-                <h1 class="display-4"><i class="bi bi-shield-lock"></i> Nafath Request Simulator</h1>
-                <p class="text-muted">Simplified simulator with predefined scenarios</p>
+        <div class="header">
+            <div class="header-icon">
+                <i class="bi bi-shield-lock"></i>
             </div>
-            
-            <form id="requestForm">
-                <div class="mb-4">
-                    <label class="form-label">
-                        <i class="bi bi-person-badge"></i> Target National ID
-                    </label>
+            <h1>محاكي طلبات نفاذ</h1>
+            <p>إنشاء وإرسال طلبات التحقق</p>
+        </div>
+
+        <form id="requestForm">
+            <div class="card">
+                <div class="card-title">
+                    <i class="bi bi-person-badge"></i>
+                    بيانات الهوية
+                </div>
+                <div class="form-group">
+                    <label class="form-label">رقم الهوية الوطنية</label>
                     <input type="text" 
                            class="form-control" 
                            id="nationalId" 
-                           placeholder="Enter national ID (e.g., 1234567890)"
+                           placeholder="أدخل رقم الهوية (مثال: 1234567890)"
                            required>
                 </div>
+            </div>
 
-                <div class="mb-4">
-                    <label class="form-label">
-                        <i class="bi bi-building"></i> Client Name
-                    </label>
-                    <select class="form-select" id="clientName" required>
-                        <option value="">Select client...</option>
-                        <option value="MINISTRY_OF_JUSTICE">Ministry of Justice</option>
-                        <option value="REAL_ESTATE_REGISTRARS">Real Estate Registrars</option>
-                        <option value="MONSHAAT">Monshaat</option>
-                        <option value="STC_BANK">STC Bank</option>
+            <div class="card">
+                <div class="card-title">
+                    <i class="bi bi-building"></i>
+                    تفاصيل العملية
+                    <span class="sim-badge"><i class="bi bi-gear"></i> محاكاة</span>
+                </div>
+                
+                <div class="form-group">
+                    <div class="form-label-with-badge">
+                        <label class="form-label" style="margin-bottom: 0;">الجهة الطالبة</label>
+                        <span class="sim-badge"><i class="bi bi-gear"></i> محاكاة</span>
+                    </div>
+                    <select class="form-select" id="clientName" required style="margin-top: 0.5rem;">
+                        <option value="">اختر الجهة...</option>
+                        <option value="MINISTRY_OF_JUSTICE">وزارة العدل</option>
+                        <option value="REAL_ESTATE_REGISTRARS">كتابات العدل</option>
+                        <option value="MONSHAAT">منشآت</option>
+                        <option value="STC_BANK">بنك STC</option>
                         <option value="STC">STC</option>
-                        <option value="SAB_BANK">SAB Bank</option>
-                        <option value="EJAR">Ejar</option>
-                        <option value="ALRAJHI_BANK">AlRajhi Bank</option>
-                        <option value="MOBILY">Mobily</option>
-                        <option value="ALINMA_BANK">Alinma Bank</option>
+                        <option value="SAB_BANK">بنك ساب</option>
+                        <option value="EJAR">إيجار</option>
+                        <option value="ALRAJHI_BANK">مصرف الراجحي</option>
+                        <option value="MOBILY">موبايلي</option>
+                        <option value="ALINMA_BANK">مصرف الإنماء</option>
                     </select>
                 </div>
 
-                <div class="mb-4">
-                    <label class="form-label">
-                        <i class="bi bi-gear"></i> Operation Type
-                    </label>
-                    <select class="form-select" id="operationType" required>
-                        <option value="">Select operation...</option>
-                        <option value="PLATFORM_LOGIN">Platform Login</option>
-                        <option value="REGISTER_ACCOUNT">Register Account</option>
-                        <option value="ISSUE_POWER_OF_ATTORNEY">Issue Power of Attorney</option>
-                        <option value="OPEN_BANK_ACCOUNT">Open Bank Account</option>
-                        <option value="ISSUE_NEW_SIM">Issue New SIM</option>
-                        <option value="VERIFY_TRUSTED_DEVICE">Verify Trusted Device</option>
-                        <option value="VERIFY_LOAN_REQUEST">Verify Loan Request</option>
-                    </select>
-                </div>
-
-                <div class="mb-4">
-                    <label class="form-label">
-                        <i class="bi bi-exclamation-triangle"></i> Operation Sensitivity
-                    </label>
-                    <select class="form-select" id="operationSensitivity" required>
-                        <option value="">Select sensitivity...</option>
-                        <option value="HIGH">High</option>
-                        <option value="MEDIUM">Medium</option>
-                        <option value="LOW">Low</option>
-                    </select>
-                </div>
-
-                <div class="mb-5">
-                    <label class="form-label">
-                        <i class="bi bi-graph-up"></i> Risk Scenario
-                    </label>
-                    <select class="form-select" id="scenario" required>
-                        <option value="">Select scenario...</option>
-                        <option value="safe">Safe - Normal user behavior</option>
-                        <option value="unusual">Unusual - Suspicious patterns detected</option>
-                        <option value="dangerous">Dangerous - High risk indicators</option>
-                        <option value="dangerous">Custom - Custom indicators</option>
-                    </select>
-                    <div class="form-text">
-                        This will load predefined context data for the selected risk level
+                <div class="form-group">
+                    <div class="form-label-with-badge">
+                        <label class="form-label" style="margin-bottom: 0;">نوع العملية</label>
+                        <span class="sim-badge"><i class="bi bi-gear"></i> محاكاة</span>
                     </div>
+                    <select class="form-select" id="operationType" required style="margin-top: 0.5rem;">
+                        <option value="">اختر نوع العملية...</option>
+                        <option value="PLATFORM_LOGIN">تسجيل دخول</option>
+                        <option value="REGISTER_ACCOUNT">تسجيل حساب جديد</option>
+                        <option value="ISSUE_POWER_OF_ATTORNEY">إصدار وكالة</option>
+                        <option value="OPEN_BANK_ACCOUNT">فتح حساب بنكي</option>
+                        <option value="ISSUE_NEW_SIM">إصدار شريحة جديدة</option>
+                        <option value="VERIFY_TRUSTED_DEVICE">تحقق من جهاز موثوق</option>
+                        <option value="VERIFY_LOAN_REQUEST">تحقق من طلب تمويل</option>
+                    </select>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 0;">
+                    <div class="form-label-with-badge">
+                        <label class="form-label" style="margin-bottom: 0;">مستوى الحساسية</label>
+                        <span class="sim-badge"><i class="bi bi-gear"></i> محاكاة</span>
+                    </div>
+                    <select class="form-select" id="operationSensitivity" required style="margin-top: 0.5rem;">
+                        <option value="">اختر المستوى...</option>
+                        <option value="HIGH">عالي</option>
+                        <option value="MEDIUM">متوسط</option>
+                        <option value="LOW">منخفض</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    <i class="bi bi-graph-up"></i>
+                    سيناريو المخاطر
+                    <span class="sim-badge"><i class="bi bi-gear"></i> محاكاة</span>
                 </div>
                 
-                <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-send"></i> Generate & Send Request
-                    </button>
-                    <button type="button" class="btn btn-secondary" onclick="resetForm()">
-                        <i class="bi bi-arrow-clockwise"></i> Reset
+                <div class="scenario-options">
+                    <label class="scenario-option" data-value="safe">
+                        <input type="radio" name="scenario" value="safe" required>
+                        <div class="scenario-radio"></div>
+                        <div class="scenario-content">
+                            <div class="scenario-title">آمن</div>
+                            <div class="scenario-desc">سلوك مستخدم طبيعي</div>
+                        </div>
+                        <span class="scenario-badge badge-safe">آمن</span>
+                    </label>
+                    
+                    <label class="scenario-option" data-value="unusual">
+                        <input type="radio" name="scenario" value="unusual">
+                        <div class="scenario-radio"></div>
+                        <div class="scenario-content">
+                            <div class="scenario-title">غير اعتيادي</div>
+                            <div class="scenario-desc">أنماط مشبوهة</div>
+                        </div>
+                        <span class="scenario-badge badge-unusual">تحذير</span>
+                    </label>
+                    
+                    <label class="scenario-option" data-value="dangerous">
+                        <input type="radio" name="scenario" value="dangerous">
+                        <div class="scenario-radio"></div>
+                        <div class="scenario-content">
+                            <div class="scenario-title">خطير</div>
+                            <div class="scenario-desc">مؤشرات خطر عالية</div>
+                        </div>
+                        <span class="scenario-badge badge-dangerous">خطر</span>
+                    </label>
+
+                    <label class="scenario-option" data-value="custom">
+                        <input type="radio" name="scenario" value="custom">
+                        <div class="scenario-radio"></div>
+                        <div class="scenario-content">
+                            <div class="scenario-title">مخصص</div>
+                            <div class="scenario-desc">مؤشرات مخصصة</div>
+                        </div>
+                        <span class="scenario-badge badge-custom">مخصص</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-send"></i>
+                    إرسال الطلب
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="resetForm()">
+                    <i class="bi bi-arrow-clockwise"></i>
+                    إعادة
+                </button>
+            </div>
+        </form>
+
+        <div id="outputSection" class="output-section">
+            <div class="card">
+                <div class="output-header">
+                    <span class="output-title">
+                        <i class="bi bi-code-square"></i>
+                        الطلب المُنشأ
+                    </span>
+                    <button class="btn-copy" onclick="copyToClipboard()">
+                        <i class="bi bi-clipboard"></i>
+                        نسخ
                     </button>
                 </div>
-            </form>
-            
-            <div id="outputSection" style="display: none;">
-                <div class="output-card">
-                    <div class="output-header d-flex justify-content-between align-items-center">
-                        <span><i class="bi bi-code-square"></i> Generated Request</span>
-                        <button class="btn btn-light btn-sm" onclick="copyToClipboard()">
-                            <i class="bi bi-clipboard"></i> Copy
-                        </button>
-                    </div>
-                    <div class="card-body">
-                        <pre id="jsonOutput"></pre>
-                    </div>
-                </div>
-                
+                <pre class="json-output" id="jsonOutput"></pre>
             </div>
         </div>
     </div>
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Bootstrap 5 -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
+        // Scenario option selection
+        document.querySelectorAll('.scenario-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.scenario-option').forEach(o => o.classList.remove('active'));
+                this.classList.add('active');
+                this.querySelector('input').checked = true;
+            });
+        });
+
         $('#requestForm').on('submit', async function(e) {
             e.preventDefault();
             
@@ -233,7 +574,7 @@
                     operation_type: $('#operationType').val(),
                     operation_sensitivity: $('#operationSensitivity').val()
                 },
-                scenario: $('#scenario').val()
+                scenario: $('input[name="scenario"]:checked').val()
             };
             
             $('#jsonOutput').text(JSON.stringify(data, null, 2));
@@ -249,21 +590,22 @@
                 if (response.ok) {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Request Sent!',
-                        text: 'Open approval_receiver.html to monitor the risk analysis response.',
-                        confirmButtonText: 'OK'
+                        title: 'تم إرسال الطلب!',
+                        text: 'افتح صفحة استقبال الموافقات لمراقبة نتائج التحليل.',
+                        confirmButtonText: 'حسناً'
                     });
                 } else {
-                    Swal.fire('Error', 'Failed to send request', 'error');
+                    Swal.fire('خطأ', 'فشل في إرسال الطلب', 'error');
                 }
             } catch (err) {
-                Swal.fire('Error', 'Failed to connect to API', 'error');
+                Swal.fire('خطأ', 'فشل الاتصال بالخادم', 'error');
             }
         });
 
         function resetForm() {
             $('#requestForm')[0].reset();
             $('#outputSection').hide();
+            document.querySelectorAll('.scenario-option').forEach(o => o.classList.remove('active'));
         }
 
         function copyToClipboard() {
@@ -271,8 +613,8 @@
             navigator.clipboard.writeText(text).then(() => {
                 Swal.fire({
                     icon: 'success',
-                    title: 'Copied!',
-                    text: 'JSON copied to clipboard',
+                    title: 'تم النسخ!',
+                    text: 'تم نسخ البيانات إلى الحافظة',
                     timer: 1500,
                     showConfirmButton: false
                 });

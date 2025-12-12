@@ -48,7 +48,7 @@
     "operations_stats": {
       "total_requests": 190,
       "approved_requests": 170,
-      "rejected_requests": 8,
+      "rejected_requests": 50,
       "timed_out_requests": 12,
       "total_sensitive_operations": 40
     },
@@ -64,15 +64,15 @@
       "all_operations": {
         "requests": 12,
         "approved": 8,
-        "rejected": 2,
+        "rejected": 35,
         "timeouts": 2
       },
       "same_operation": {
         "requests": 2,
         "approved": 1,
-        "rejected": 1,
+        "rejected": 20,
         "timeouts": 0,
-        "first_time_used": false
+        "first_time_used": true
       }
     }
   },

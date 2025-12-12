@@ -135,13 +135,21 @@ Return a structured JSON:
   "risk_score": number from 0 to 100,
   "risk_level": "LOW" | "MEDIUM" | "HIGH" | "CRITICAL",
   "risk_reasons": [
-    "Clear explanation of each anomaly...",
-    "Neutral signals supporting normal behavior...",
-    "Any reinforcing patterns..."
+    "Brief reason 1 (max 15 words)",
+    "Brief reason 2 (max 15 words)",
+    ...
   ],
-  "overall_assessment": "Readable paragraph summarizing risk.",
+  "overall_assessment": "Short paragraph (2-3 sentences max).",
   "analysis_confidence": number from 0 to 100
 }
+
+IMPORTANT for risk_reasons:
+- Each reason MUST be concise: 10-15 words maximum.
+- Focus on the key fact, not detailed explanation.
+- Example: "Requester IP in Vietnam with VPN, user history is Saudi-only."
+- Example: "Device used for 310 different IDs in 30 days - fraud pattern."
+- Example: "First-time sensitive operation with 10 recent rejections."
+- Do NOT write long sentences or paragraphs in reasons.
 
 Interpretation:
 - risk_score = weighted probability of impersonation

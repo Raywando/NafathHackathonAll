@@ -1,173 +1,624 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nafath Approval Receiver</title>
+    <title>استقبال الموافقات - نفاذ</title>
     
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     
     <style>
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 2rem 0;
+        :root {
+            --bg-primary: #0d1b2a;
+            --bg-secondary: #1b2838;
+            --bg-card: #1e2d3d;
+            --accent-teal: #2dd4bf;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-orange: #f59e0b;
+            --accent-blue: #3b82f6;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border-color: #2a3f54;
         }
-        .main-container {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            padding: 3rem;
-            max-width: 1200px;
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 700px;
             margin: 0 auto;
         }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--accent-teal), #0891b2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+
+        .header-icon i {
+            font-size: 2.5rem;
+            color: white;
+        }
+
+        .header h1 {
+            color: var(--accent-teal);
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin: 0 0 0.5rem;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        /* Status Badge */
+        .status-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
         .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .status-waiting {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--accent-orange);
+            animation: pulse 2s infinite;
+        }
+
+        .status-received {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent-green);
+        }
+
+        .status-error {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--accent-red);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Polling Info */
+        .polling-info {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .polling-info i {
+            color: var(--accent-blue);
+            font-size: 1.25rem;
+        }
+
+        .polling-info-text {
+            flex: 1;
+        }
+
+        .polling-info-text strong {
+            color: var(--text-primary);
+        }
+
+        .polling-info-text span {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .poll-count {
+            background: var(--bg-secondary);
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Waiting Section */
+        .waiting-section {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .spinner-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 2rem;
+        }
+
+        .spinner {
+            width: 100%;
+            height: 100%;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--accent-teal);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .waiting-text {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .last-checked {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Approval Section */
+        .approval-section {
+            display: none;
+        }
+
+        /* Risk Score Display */
+        .risk-display {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .risk-circle {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            position: relative;
+        }
+
+        .risk-circle::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            padding: 4px;
+            background: linear-gradient(135deg, var(--risk-color), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+        }
+
+        .risk-score-value {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .risk-score-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        .risk-level-badge {
             display: inline-block;
             padding: 0.5rem 1.5rem;
             border-radius: 25px;
             font-size: 1rem;
             font-weight: 600;
-            margin-left: 1rem;
         }
-        .status-waiting {
-            background: #fff3cd;
-            color: #856404;
-            animation: pulse 2s infinite;
+
+        .risk-low { 
+            --risk-color: var(--accent-green);
+            color: var(--accent-green);
         }
-        .status-received {
-            background: #d4edda;
-            color: #155724;
+        .risk-low .risk-level-badge {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent-green);
         }
-        .status-error {
-            background: #f8d7da;
-            color: #721c24;
+
+        .risk-medium { 
+            --risk-color: var(--accent-orange);
+            color: var(--accent-orange);
         }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
+        .risk-medium .risk-level-badge {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--accent-orange);
         }
-        .spinner-border-custom {
-            width: 3rem;
-            height: 3rem;
-            border-width: 0.3rem;
+
+        .risk-high { 
+            --risk-color: #f97316;
+            color: #f97316;
         }
-        #approvalOutput {
-            background: #1e1e1e;
-            color: #d4d4d4;
-            border-radius: 8px;
-            padding: 1.5rem;
-            max-height: 600px;
-            overflow-y: auto;
-            font-family: 'Courier New', monospace;
+        .risk-high .risk-level-badge {
+            background: rgba(249, 115, 22, 0.15);
+            color: #f97316;
+        }
+
+        .risk-critical { 
+            --risk-color: var(--accent-red);
+            color: var(--accent-red);
+        }
+        .risk-critical .risk-level-badge {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--accent-red);
+        }
+
+        /* Confidence Badge */
+        .confidence-section {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .confidence-item {
+            text-align: center;
+        }
+
+        .confidence-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-teal);
+        }
+
+        .confidence-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* Overall Assessment */
+        .assessment-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-top: 1.5rem;
+            border-right: 3px solid var(--accent-teal);
+        }
+
+        .assessment-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent-teal);
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .assessment-text {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            text-align: right;
+        }
+
+        /* Risk Factors */
+        .factors-section {
+            margin-top: 1.5rem;
+        }
+
+        .factors-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .factors-title {
+            color: var(--text-secondary);
             font-size: 0.9rem;
-            white-space: pre-wrap;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
-        .output-card {
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            margin-top: 2rem;
+
+        .factors-title i {
+            color: var(--accent-orange);
         }
-        .output-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 1rem;
-            border-radius: 10px 10px 0 0;
+
+        .factors-count {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--accent-orange);
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
             font-weight: 600;
         }
-        .risk-score {
-            font-size: 2rem;
+
+        .factor-item {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            border-right: 3px solid var(--accent-orange);
+            transition: all 0.2s;
+        }
+
+        .factor-item:hover {
+            background: rgba(27, 40, 56, 0.8);
+            transform: translateX(-4px);
+        }
+
+        .factor-number {
+            width: 28px;
+            height: 28px;
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--accent-orange);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
             font-weight: 700;
-            margin: 1rem 0;
+            flex-shrink: 0;
         }
-        .risk-low {
-            color: #28a745;
+
+        .factor-text {
+            flex: 1;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            line-height: 1.6;
         }
-        .risk-medium {
-            color: #ffc107;
+
+        /* Recommendation */
+        .recommendation-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+            margin-top: 1.5rem;
         }
-        .risk-high {
-            color: #ff6b35;
-        }
-        .risk-critical {
-            color: #dc3545;
-            font-weight: 800;
-        }
-        .reason-item {
-            background: #f8f9fa;
-            padding: 1rem;
-            border-radius: 8px;
+
+        .recommendation-label {
+            color: var(--text-muted);
+            font-size: 0.85rem;
             margin-bottom: 0.5rem;
-            border-left: 4px solid #667eea;
         }
-        .polling-info {
-            background: #e7f3ff;
-            border-left: 4px solid #2196F3;
+
+        .recommendation-value {
+            color: var(--text-primary);
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        /* JSON Output */
+        .output-section {
+            margin-top: 1.5rem;
+        }
+
+        .output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .output-title {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-copy {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-copy:hover {
+            border-color: var(--accent-teal);
+            color: var(--accent-teal);
+        }
+
+        .json-output {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
             padding: 1rem;
-            border-radius: 5px;
-            margin-bottom: 1.5rem;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.8rem;
+            color: var(--accent-teal);
+            overflow-x: auto;
+            white-space: pre-wrap;
+            max-height: 300px;
+            direction: ltr;
+            text-align: left;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--text-secondary);
+        }
+
+        /* Risk Scale */
+        .risk-scale {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .risk-scale-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .risk-scale-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        /* Sweet Alert Customization */
+        .swal2-popup {
+            background: var(--bg-card) !important;
+            color: var(--text-primary) !important;
+            border-radius: 16px !important;
+        }
+
+        .swal2-title {
+            color: var(--text-primary) !important;
+        }
+
+        .swal2-html-container {
+            color: var(--text-secondary) !important;
+        }
+
+        .swal2-confirm {
+            background: var(--accent-teal) !important;
+            border-radius: 10px !important;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="main-container">
-            <div class="text-center mb-4">
-                <h1 class="display-4">
-                    <i class="bi bi-shield-check"></i> Nafath Approval Receiver
-                </h1>
-                <p class="text-muted">Monitoring for approval responses</p>
-                <div>
-                    <span id="statusText">Status:</span>
-                    <span id="statusBadge" class="status-badge status-waiting">
-                        <i class="bi bi-hourglass-split"></i> Waiting for approval...
-                    </span>
-                </div>
+        <div class="header">
+            <div class="header-icon">
+                <i class="bi bi-shield-check"></i>
             </div>
-
-            <div class="polling-info">
-                <i class="bi bi-info-circle"></i>
-                <strong>Auto-polling enabled:</strong> Checking for approval every 10 seconds
-                <span id="pollCount" class="ms-2">(0 requests)</span>
-            </div>
-
-            <div id="waitingSection" class="text-center py-5">
-                <div class="spinner-border spinner-border-custom text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
+            <h1>استقبال الموافقات</h1>
+            <p>مراقبة استجابات تحليل المخاطر</p>
+            
+            <div class="status-container">
+                <div id="statusBadge" class="status-badge status-waiting">
+                    <i class="bi bi-hourglass-split"></i>
+                    <span>في انتظار الموافقة...</span>
                 </div>
-                <p class="mt-3 text-muted">Waiting for approval response from backend...</p>
-                <small class="text-muted">Last checked: <span id="lastChecked">Never</span></small>
-            </div>
-
-            <div id="approvalSection" class="output-card" style="display: none;">
-                <div class="output-header d-flex justify-content-between align-items-center">
-                    <span><i class="bi bi-check-circle"></i> Approval Response Received</span>
-                    <button class="btn btn-light btn-sm" onclick="copyToClipboard()">
-                        <i class="bi bi-clipboard"></i> Copy JSON
-                    </button>
-                </div>
-                <div class="card-body">
-                    <div id="approvalSummary" class="mb-4"></div>
-                    <h5 class="mb-3">Full Response:</h5>
-                    <pre id="approvalOutput"></pre>
-                </div>
-            </div>
-
-            <div class="text-center mt-4">
-                <button class="btn btn-secondary" onclick="resetReceiver()">
-                    <i class="bi bi-arrow-clockwise"></i> Reset & Check Again
-                </button>
             </div>
         </div>
+
+        <div class="polling-info">
+            <i class="bi bi-arrow-repeat"></i>
+            <div class="polling-info-text">
+                <strong>الاستعلام التلقائي:</strong>
+                <span>يتم التحقق كل ثانية</span>
+            </div>
+            <span id="pollCount" class="poll-count">0 طلب</span>
+        </div>
+
+        <div class="card">
+            <div id="waitingSection" class="waiting-section">
+                <div class="spinner-container">
+                    <div class="spinner"></div>
+                </div>
+                <p class="waiting-text">في انتظار استجابة الموافقة من الخادم...</p>
+                <p class="last-checked">آخر تحقق: <span id="lastChecked">لم يتم</span></p>
+            </div>
+
+            <div id="approvalSection" class="approval-section">
+                <div id="approvalSummary"></div>
+                
+                <div class="output-section">
+                    <div class="output-header">
+                        <span class="output-title">
+                            <i class="bi bi-code-square"></i>
+                            الاستجابة الكاملة
+                        </span>
+                        <button class="btn-copy" onclick="copyToClipboard()">
+                            <i class="bi bi-clipboard"></i>
+                            نسخ
+                        </button>
+                    </div>
+                    <pre class="json-output" id="approvalOutput"></pre>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn btn-secondary" onclick="resetReceiver()">
+            <i class="bi bi-arrow-clockwise"></i>
+            إعادة التحقق
+        </button>
     </div>
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Bootstrap 5 -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -178,7 +629,7 @@
 
         function startPolling() {
             checkApproval();
-            pollingInterval = setInterval(checkApproval, 10000);
+            pollingInterval = setInterval(checkApproval, 1000);
         }
 
         function stopPolling() {
@@ -195,13 +646,13 @@
             }
 
             pollCount++;
-            $('#pollCount').text(`(${pollCount} request${pollCount > 1 ? 's' : ''})`);
+            $('#pollCount').text(`${pollCount} طلب`);
             
-            const now = new Date().toLocaleTimeString();
+            const now = new Date().toLocaleTimeString('ar-SA');
             $('#lastChecked').text(now);
 
             try {
-                const response = await fetch('http://localhost:8001/api/approval');
+                const response = await fetch('http://localhost:8002/api/approval');
                 
                 if (response.ok) {
                     const approval = await response.json();
@@ -218,12 +669,12 @@
                 }
             } catch (err) {
                 console.error('Failed to check approval:', err);
-                updateStatus('error', 'Connection Error');
+                updateStatus('error', 'خطأ في الاتصال');
             }
         }
 
         function displayApproval(approval) {
-            updateStatus('received', 'Approval Received!');
+            updateStatus('received', 'تم استلام الموافقة!');
             
             $('#waitingSection').hide();
             $('#approvalSection').show();
@@ -255,69 +706,134 @@
 
             Swal.fire({
                 icon: 'success',
-                title: 'Approval Received!',
-                text: 'The risk analysis has been completed.',
-                confirmButtonText: 'View Details'
+                title: 'تم استلام الموافقة!',
+                text: 'اكتمل تحليل المخاطر.',
+                confirmButtonText: 'عرض التفاصيل'
             });
         }
 
         function displaySummary(riskData) {
-            let summaryHtml = '<div class="row">';
+            let summaryHtml = '';
             
+            // Risk Score Display
             if (riskData.risk_score !== undefined) {
                 const score = riskData.risk_score;
-                let scoreClass = 'risk-low';
-                let scoreLabel = 'LOW';
-                let scoreBadge = 'success';
+                let riskClass = 'risk-low';
+                let riskLabel = 'منخفض';
+                let riskLabelEn = riskData.risk_level || 'LOW';
                 
-                // Risk thresholds: 0-20: LOW, 21-50: MEDIUM, 51-75: HIGH, 76-100: CRITICAL
-                if (score >= 76) {
-                    scoreClass = 'risk-critical';
-                    scoreLabel = 'CRITICAL';
-                    scoreBadge = 'danger';
-                } else if (score >= 51) {
-                    scoreClass = 'risk-high';
-                    scoreLabel = 'HIGH';
-                    scoreBadge = 'warning';
-                } else if (score >= 21) {
-                    scoreClass = 'risk-medium';
-                    scoreLabel = 'MEDIUM';
-                    scoreBadge = 'warning';
+                if (riskLabelEn === 'CRITICAL' || score >= 76) {
+                    riskClass = 'risk-critical';
+                    riskLabel = 'حرج';
+                } else if (riskLabelEn === 'HIGH' || score >= 51) {
+                    riskClass = 'risk-high';
+                    riskLabel = 'عالي';
+                } else if (riskLabelEn === 'MEDIUM' || score >= 21) {
+                    riskClass = 'risk-medium';
+                    riskLabel = 'متوسط';
                 }
                 
                 summaryHtml += `
-                    <div class="col-md-6 text-center">
-                        <h5>Risk Score</h5>
-                        <div class="risk-score ${scoreClass}">${score}/100</div>
-                        <span class="badge bg-${scoreBadge} fs-6 mt-2">${scoreLabel}</span>
-                        <p class="text-muted mt-2">
-                            <small>
-                                0-20: LOW | 21-50: MEDIUM | 51-75: HIGH | 76-100: CRITICAL
-                            </small>
-                        </p>
-                    </div>
+                    <div class="risk-display ${riskClass}">
+                        <div class="risk-circle">
+                            <span class="risk-score-value">${score}</span>
+                            <span class="risk-score-label">من 100</span>
+                        </div>
+                        <span class="risk-level-badge">${riskLabel} - ${riskLabelEn}</span>
+                        
+                        <div class="risk-scale">
+                            <div class="risk-scale-item">
+                                <div class="risk-scale-dot" style="background: var(--accent-green)"></div>
+                                0-20
+                            </div>
+                            <div class="risk-scale-item">
+                                <div class="risk-scale-dot" style="background: var(--accent-orange)"></div>
+                                21-50
+                            </div>
+                            <div class="risk-scale-item">
+                                <div class="risk-scale-dot" style="background: #f97316"></div>
+                                51-75
+                            </div>
+                            <div class="risk-scale-item">
+                                <div class="risk-scale-dot" style="background: var(--accent-red)"></div>
+                                76-100
+                            </div>
+                        </div>
                 `;
+                
+                // Confidence section
+                if (riskData.analysis_confidence !== undefined) {
+                    summaryHtml += `
+                        <div class="confidence-section">
+                            <div class="confidence-item">
+                                <div class="confidence-value">${riskData.analysis_confidence}%</div>
+                                <div class="confidence-label">دقة التحليل</div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                summaryHtml += `</div>`;
             }
 
-            if (riskData.recommendation) {
+            // Overall Assessment
+            if (riskData.overall_assessment) {
                 summaryHtml += `
-                    <div class="col-md-6 text-center">
-                        <h5>Recommendation</h5>
-                        <div class="risk-score">${riskData.recommendation}</div>
+                    <div class="assessment-card">
+                        <div class="assessment-header">
+                            <i class="bi bi-file-earmark-text"></i>
+                            التقييم الشامل
+                        </div>
+                        <p class="assessment-text">${riskData.overall_assessment}</p>
                     </div>
                 `;
             }
 
-            summaryHtml += '</div>';
-
-            if (riskData.reasons && Array.isArray(riskData.reasons)) {
-                summaryHtml += '<div class="mt-4"><h5>Risk Factors:</h5>';
-                riskData.reasons.forEach(reason => {
-                    summaryHtml += `<div class="reason-item"><i class="bi bi-exclamation-triangle"></i> ${reason}</div>`;
+            // Risk Reasons (priority over legacy 'reasons')
+            const reasons = riskData.risk_reasons || riskData.reasons;
+            if (reasons && Array.isArray(reasons) && reasons.length > 0) {
+                summaryHtml += `
+                    <div class="factors-section">
+                        <div class="factors-header">
+                            <div class="factors-title">
+                                <i class="bi bi-exclamation-triangle"></i>
+                                عوامل المخاطر
+                            </div>
+                            <span class="factors-count">${reasons.length} عامل</span>
+                        </div>
+                `;
+                reasons.forEach((reason, index) => {
+                    summaryHtml += `
+                        <div class="factor-item">
+                            <div class="factor-number">${index + 1}</div>
+                            <span class="factor-text">${reason}</span>
+                        </div>
+                    `;
                 });
                 summaryHtml += '</div>';
-            } else if (riskData.analysis) {
-                summaryHtml += `<div class="mt-4"><h5>Analysis:</h5><div class="reason-item">${riskData.analysis}</div></div>`;
+            }
+
+            // Recommendation (legacy support)
+            if (riskData.recommendation) {
+                summaryHtml += `
+                    <div class="recommendation-card">
+                        <div class="recommendation-label">التوصية</div>
+                        <div class="recommendation-value">${riskData.recommendation}</div>
+                    </div>
+                `;
+            }
+
+            // Analysis (legacy support)
+            if (riskData.analysis && !riskData.overall_assessment) {
+                summaryHtml += `
+                    <div class="assessment-card">
+                        <div class="assessment-header">
+                            <i class="bi bi-file-text"></i>
+                            التحليل
+                        </div>
+                        <p class="assessment-text">${riskData.analysis}</p>
+                    </div>
+                `;
             }
 
             $('#approvalSummary').html(summaryHtml);
@@ -327,26 +843,28 @@
             const badge = $('#statusBadge');
             badge.removeClass('status-waiting status-received status-error');
             
+            let icon = '';
             if (type === 'waiting') {
                 badge.addClass('status-waiting');
-                badge.html('<i class="bi bi-hourglass-split"></i> ' + text);
+                icon = '<i class="bi bi-hourglass-split"></i>';
             } else if (type === 'received') {
                 badge.addClass('status-received');
-                badge.html('<i class="bi bi-check-circle"></i> ' + text);
+                icon = '<i class="bi bi-check-circle"></i>';
             } else if (type === 'error') {
                 badge.addClass('status-error');
-                badge.html('<i class="bi bi-x-circle"></i> ' + text);
+                icon = '<i class="bi bi-x-circle"></i>';
             }
+            badge.html(icon + '<span>' + text + '</span>');
         }
 
         function resetReceiver() {
             approvalReceived = false;
             pollCount = 0;
-            $('#pollCount').text('(0 requests)');
-            $('#lastChecked').text('Never');
+            $('#pollCount').text('0 طلب');
+            $('#lastChecked').text('لم يتم');
             $('#waitingSection').show();
             $('#approvalSection').hide();
-            updateStatus('waiting', 'Waiting for approval...');
+            updateStatus('waiting', 'في انتظار الموافقة...');
             startPolling();
         }
 
@@ -355,8 +873,8 @@
             navigator.clipboard.writeText(text).then(() => {
                 Swal.fire({
                     icon: 'success',
-                    title: 'Copied!',
-                    text: 'Approval response copied to clipboard',
+                    title: 'تم النسخ!',
+                    text: 'تم نسخ الاستجابة إلى الحافظة',
                     timer: 1500,
                     showConfirmButton: false
                 });

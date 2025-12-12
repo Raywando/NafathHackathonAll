@@ -56,9 +56,9 @@ class _ProcessScreenState extends State<ProcessScreen>
       const Duration(seconds: 5),
       (timer) async {
         if (_screenState == ScreenState.waiting) {
-          setState(() {
-            _fetcher = fetchRequest();
-          });
+        setState(() {
+          _fetcher = fetchRequest();
+        });
         }
       },
     );
@@ -96,9 +96,9 @@ class _ProcessScreenState extends State<ProcessScreen>
 
     try {
       final response = await post(
-        Uri.parse("$apiUrl/api/approval"),
-        body: jsonEncode({"status": "approved"}),
-        headers: {"Content-Type": "application/json"},
+      Uri.parse("$apiUrl/api/approval"),
+      body: jsonEncode({"status": "approved"}),
+      headers: {"Content-Type": "application/json"},
       );
 
       if (response.statusCode == 200) {
@@ -117,7 +117,7 @@ class _ProcessScreenState extends State<ProcessScreen>
           );
 
           // Risk-based decision
-          if (riskScore > 85) {
+          if (riskScore > 80) {
             // HIGH RISK - Auto reject
             setState(() {
               _screenState = ScreenState.autoRejected;
@@ -274,9 +274,9 @@ class _ProcessScreenState extends State<ProcessScreen>
     _fetcher = fetchRequest();
     _timer = Timer.periodic(const Duration(seconds: 5), (timer) async {
       if (_screenState == ScreenState.waiting) {
-        setState(() {
-          _fetcher = fetchRequest();
-        });
+      setState(() {
+        _fetcher = fetchRequest();
+      });
       }
     });
   }
@@ -599,35 +599,35 @@ class _ProcessScreenState extends State<ProcessScreen>
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
       child: Column(
-        children: [
-          Expanded(
-            child: Center(
+                  children: [
+                    Expanded(
+                      child: Center(
               child: SizedBox(
                 width: 280,
                 height: 280,
-                child: AnimatedBuilder(
-                  animation: _animationController,
-                  builder: (context, child) {
-                    return CustomPaint(
-                      painter: CircularTimerPainter(
-                        progress: _animationController.value,
-                      ),
-                      child: Center(
-                        child: Padding(
+                                child: AnimatedBuilder(
+                                  animation: _animationController,
+                                  builder: (context, child) {
+                                    return CustomPaint(
+                                      painter: CircularTimerPainter(
+                                        progress: _animationController.value,
+                                      ),
+                                      child: Center(
+                                        child: Padding(
                           padding: const EdgeInsets.all(40.0),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
                                 _request?.description ?? '',
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  fontSize: 14,
+                                            textAlign: TextAlign.center,
+                                            style: const TextStyle(
+                                              fontSize: 14,
                                   color: NafathColors.textPrimary,
-                                  fontWeight: FontWeight.w500,
+                                              fontWeight: FontWeight.w500,
                                   height: 1.5,
-                                ),
-                              ),
+                                          ),
+                                        ),
                               const SizedBox(height: 16),
                               Text(
                                 '$_countdownSeconds',
@@ -652,17 +652,17 @@ class _ProcessScreenState extends State<ProcessScreen>
                       ),
                     );
                   },
-                ),
-              ),
-            ),
-          ),
+                                ),
+                              ),
+                            ),
+                          ),
           // Approve and Reject Buttons
           Padding(
             padding: const EdgeInsets.only(bottom: 20),
             child: Row(
               children: [
-                // Reject Button
-                Expanded(
+                          // Reject Button
+                          Expanded(
                   child: Container(
                     height: 50,
                     decoration: BoxDecoration(
@@ -670,7 +670,7 @@ class _ProcessScreenState extends State<ProcessScreen>
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: TextButton(
-                      onPressed: _handleReject,
+                              onPressed: _handleReject,
                       child: Text(
                         'رفض',
                         style: TextStyle(
@@ -690,24 +690,24 @@ class _ProcessScreenState extends State<ProcessScreen>
                     decoration: BoxDecoration(
                       color: NafathColors.teal,
                       borderRadius: BorderRadius.circular(12),
-                    ),
+                                ),
                     child: TextButton(
                       onPressed: _handleApprove,
-                      child: const Text(
+                              child: const Text(
                         'قبول',
-                        style: TextStyle(
+                                style: TextStyle(
                           fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                                  fontWeight: FontWeight.w600,
                           color: Colors.white,
                         ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+                  ],
       ),
     );
   }
@@ -747,7 +747,7 @@ class _ProcessScreenState extends State<ProcessScreen>
     try {
       final response = await get(Uri.parse("$apiUrl/api/request"));
 
-      if (response.statusCode == 200) {
+    if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body) as Map<String, dynamic>;
         
         // Check if response has data (not empty or error)
@@ -770,8 +770,8 @@ class _ProcessScreenState extends State<ProcessScreen>
           }
           
           return Request(description: description);
-        }
       }
+    }
     } catch (e) {
       print("Error fetching request: $e");
     }

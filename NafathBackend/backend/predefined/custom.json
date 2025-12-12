@@ -2,32 +2,33 @@
   "requester_context": {
     "device": {
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
-      "device_model": "Samsung Galaxy S25 Ultra",
-      "os_version": "Android 16",
+      "device_model": "Generic Windows VM",
+      "os_version": "Windows 10 Enterprise",
       "browser": "Chrome 143",
-      "device_hash": "a1b2c3d4e5f6789012345678901234ab"
+      "device_hash": "ff12aa34bb56cc78dd90ee12ff34aa56"
     },
     "ip_information": {
-      "ip": "84.21.91.10",
-      "city": "Jeddah",
-      "country": "Saudi Arabia",
+      "ip": "103.212.45.11",
+      "city": "Hanoi",
+      "country": "Vietnam",
       "is_vpn": true
     },
     "device_statistics_30d": {
-      "total_requests": 8,
-      "unique_national_ids": 4,
-      "requests_for_target": 2,
+      "total_requests": 480,
+      "unique_national_ids": 310,
+      "requests_for_target": 3,
       "first_time_used_for_target_id": true
     }
   },
+
   "approver_context": {
     "profile": {
-      "age": 28,
+      "age": 45,
       "gender": "MALE"
     },
     "ip_information": {
-      "ip": "244.178.44.111",
-      "city": "Dammam",
+      "ip": "5.188.77.22",
+      "city": "Jeddah",
       "country": "Saudi Arabia",
       "is_vpn": false
     },
@@ -36,66 +37,71 @@
       "device_model": "iPhone 17 Pro Max",
       "os_version": "iOS 19",
       "browser": "Safari 18",
-      "device_hash": "f9e8d7c6b5a4930281746352819047bc"
+      "device_hash": "11223344556677889900aabbccddeeff"
     },
     "device_session": {
-      "active_session_duration_minutes": 2
+      "active_session_duration_minutes": 0.5
     }
   },
+
   "target_user_history": {
     "operations_stats": {
-      "total_requests": 89,
-      "approved_requests": 72,
-      "rejected_requests": 12,
-      "timed_out_requests": 5,
-      "total_sensitive_operations": 8
+      "total_requests": 234,
+      "approved_requests": 198,
+      "rejected_requests": 2800,
+      "timed_out_requests": 8,
+      "total_sensitive_operations": 45
     },
     "device_usage": {
-      "unique_devices_requested_from": 5,
-      "unique_devices_approved_from": 3
+      "unique_devices_requested_from": 15,
+      "unique_devices_approved_from": 4
     },
     "location_history": {
-      "cities_requested_from": ["Dammam", "Riyadh", "Jeddah", "Makkah"],
-      "cities_approved_from": ["Dammam", "Riyadh"]
+      "cities_requested_from": ["Riyadh", "Jeddah", "Makkah", "Dammam", "Taif", "Abha"],
+      "cities_approved_from": ["Riyadh", "Jeddah"]
     },
     "recent_activity_24h": {
       "all_operations": {
-        "requests": 12,
-        "approved": 8,
-        "rejected": 3,
-        "timeouts": 1
+        "requests": 42,
+        "approved": 10,
+        "rejected": 20,
+        "timeouts": 7
       },
       "same_operation": {
-        "requests": 5,
-        "approved": 3,
-        "rejected": 2,
-        "timeouts": 0,
-        "first_time_used": false
+        "requests": 12,
+        "approved": 1,
+        "rejected": 10,
+        "timeouts": 1,
+        "first_time_used": true
       }
     }
   },
+
   "vetting_information": {
     "user_historical_inputs": {
       "known_input_names": [
-        {"name": "Khalid Abdullah Al-Mutairi"},
-        {"name": "K. Al-Mutairi"},
-        {"name": "Khalid A. Mutairi"}
+        {"name": "Faisal Ibrahim Al-Dosari"},
+        {"name": "F. Al-Dosari"},
+        {"name": "Faisal I. Dosari"},
+        {"name": "F.I. Al-Dosari"}
       ],
       "known_input_phone_numbers": [
-        {"phone": "+966551122334"},
-        {"phone": "+966559988776"}
+        {"phone": "+966505556677"},
+        {"phone": "+966544332211"},
+        {"phone": "+966599887766"}
       ],
       "known_input_addresses": [
-        {"address": "Prince Mohammed Bin Fahd Road, Dammam 31411"},
-        {"address": "Al Khobar Street, Dammam"}
+        {"address": "Olaya Street, Riyadh 11564"},
+        {"address": "King Abdullah Road, Riyadh"},
+        {"address": "Al Malqa District, Riyadh"}
       ]
     },
     "user_official_data": {
       "registered_phone_numbers": [
-        {"phone": "+966551122334"}
+        {"phone": "+966505556677"}
       ],
       "registered_addresses": [
-        {"address": "Prince Mohammed Bin Fahd Road, Dammam 31411"}
+        {"address": "Olaya Street, Riyadh 11564"}
       ]
     }
   }
