@@ -3,16 +3,16 @@
     "target_national_id": "1111111111"
   },
   "operation_details": {
-    "client_name": "STC_BANK",
+    "client_name": "SAB_BANK",
     "operation_type": "OPEN_BANK_ACCOUNT",
     "operation_sensitivity": "HIGH"
   },
   "requester_context": {
     "ip_information": {
-      "is_vpn": false
+      "is_vpn": true
     },
     "device_statistics_30d": {
-      "first_time_used_for_target_id": false
+      "first_time_used_for_target_id": true
     }
   },
   "approver_context": {
@@ -26,10 +26,10 @@
     },
     "recent_activity_24h": {
       "all_operations": {
-        "rejected": 500
+        "rejected": 50
       },
       "same_operation": {
-        "rejected": 5000,
+        "rejected": 50,
         "first_time_used": false
       }
     }
