@@ -13,7 +13,6 @@ REQUEST_FILE = 'current_request.json'
 APPROVAL_FILE = 'current_approval.json'
 PREVIOUS_REQUEST_FILE = 'previous_request.json'
 PREVIOUS_APPROVAL_FILE = 'previous_approval.json'
-<<<<<<< HEAD
 PREDEFINED_FOLDER = 'predefined'
 
 def load_predefined_scenario(scenario_name):
@@ -32,24 +31,6 @@ def merge_request_data(user_input, predefined_data):
     combined['target_user_history'] = predefined_data.get('target_user_history', {})
     combined['vetting_information'] = predefined_data.get('vetting_information', {})
     return combined
-=======
-VISUAL_SESSION_FILE = 'visual_session.json'
-
-# Color codes for visual pairing (same as absher-hakathon)
-COLOR_CODES = ['R', 'G', 'B', 'Y', 'C', 'M']
-
-def generate_visual_sequence(length=4):
-    """Generate a random color sequence for visual pairing"""
-    sequence = []
-    last_color = None
-    for _ in range(length):
-        # Avoid same color twice in a row
-        available = [c for c in COLOR_CODES if c != last_color]
-        color = random.choice(available)
-        sequence.append(color)
-        last_color = color
-    return sequence
->>>>>>> origin/visual-scanner-cleanup
 
 @app.route('/api/request', methods=['POST'])
 def store_request():

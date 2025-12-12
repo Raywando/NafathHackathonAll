@@ -3,11 +3,7 @@ from openai import OpenAI
 from env import OPENAI_API_KEY
 
 def analyze_risk(request):
-<<<<<<< HEAD
-    client = OpenAI(api_key=OPENAI_API_KEY)
-=======
     client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
->>>>>>> origin/visual-scanner-cleanup
     with open('prompt.txt', 'r') as f:
         prompt = f.read()
 
