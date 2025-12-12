@@ -40,9 +40,6 @@ class _ProcessScreenState extends State<ProcessScreen>
   final _timeout = 60;
   late int _countdownSeconds;
   late Timer _countdownTimer;
-<<<<<<< HEAD
-  String apiUrl = "http://localhost:8001";
-=======
   String apiUrl = "https://medicalai.ngrok.app";
   
   // Risk-based states
@@ -50,7 +47,6 @@ class _ProcessScreenState extends State<ProcessScreen>
   RiskResult? _riskResult;
   String? _detectedSequence; // Scanned visual sequence
   bool _stepUpVerified = false;
->>>>>>> origin/visual-scanner-cleanup
 
   @override
   void initState() {
